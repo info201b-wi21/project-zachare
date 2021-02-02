@@ -1,5 +1,5 @@
 # INFO 201 Course Project
-**Group BB-7 ***Heather Yang, Zachary Grieser and Liza Volozin*
+**Group BB-7** *Heather Yang, Zachary Grieser and Liza Volozin*
 
 ## Section 1. Describing the Problem
 <p>Adult malnutrition is a severe humanitarian and public health issue that primarily affects developing countries. Malnutrition refers to one’s condition when they are lacking necessary nutrients, often due to inadequate food supply. Malnutrition compromises one’s immune system, making them more susceptible to disease and causes delayed recovery times. It also is associated with many societally damaging issues such as poverty, food insecurity, and mortality. 
@@ -24,22 +24,22 @@ This problem affects millions of people globally and can detriment their health 
 
 ## Section 3. The Data Sets
 
-1. [Total alcohol consumption per capita](https://data.worldbank.org/indicator/SH.ALC.PCAP.LI)
+1. **Total alcohol consumption per capita**
 - https://data.worldbank.org/indicator/SH.ALC.PCAP.LI
 - “The estimates for the total alcohol consumption are produced by summing up the 3-year average per capita (15+) recorded alcohol consumption and an estimate of per capita (15+) unrecorded alcohol consumption for a calendar year. Tourist consumption takes into account tourists visiting the country and inhabitants visiting other countries.” (World Health Organization, Global Health Observatory Data Repository)
 - Question 1
 
-2. [Prevalence of undernourishment](https://data.worldbank.org/indicator/SN.ITK.DEFC.ZS)
+2. **Prevalence of undernourishment**
 - https://data.worldbank.org/indicator/SN.ITK.DEFC.ZS
 - “Data on undernourishment are from the Food and Agriculture Organization (FAO) of the United Nations and measure food deprivation based on average food available for human consumption per person, the level of inequality in access to food, and the minimum calories required for an average person.”(Food and Agriculture Organization)
 - All questions
 
-3. [Current health expenditure per capita](https://databank.worldbank.org/reports.aspx?source=2&series=SH.XPD.CHEX.PC.CD)
+3. **Current health expenditure per capita**
 - https://databank.worldbank.org/reports.aspx?source=2&series=SH.XPD.CHEX.PC.CD
 - “The health expenditure estimates have been prepared by the World Health Organization under the framework of the System of Health Accounts 2011 (SHA 2011). The Health SHA 2011 tracks all health spending in a given country over a defined period of time regardless of the entity or institution that financed and managed that spending. It generates consistent and comprehensive data on health spending in a country, which in turn can contribute to evidence-based policy-making.” (World Development Indicators)
 - Question 2
 
-4. [Malnutrition effects, country income, and population under 5](https://www.kaggle.com/ruchi798/malnutrition-across-the-globe)
+4. **Malnutrition effects, country income, and population under 5**
 - https://www.kaggle.com/ruchi798/malnutrition-across-the-globe
 - Does not include methodology (UNICEF)
 - Question 3
