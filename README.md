@@ -13,15 +13,39 @@ This problem affects millions of people globally and can detriment their health 
 
 ## Section 2. Analysis Questions
 
-**Liza - Is there a significant correlation between alcohol consumption and malnutrition in developing countries?**
+**1. Is there a significant correlation between alcohol consumption and malnutrition in developing countries?**
 <p>This is an interesting question to investigate because alcohol is known to replace nutrients in one’s body, resulting in insufficient uptake of those nutrients. This can lead to malnutrition and consequently, other health problems as well. </p>
 
-**Heather - Is there a relationship between malnourishment rates and health expenditures, and if so, what is the correlation?**
+**2. Is there a relationship between malnourishment rates and health expenditures, and if so, what is the correlation?**
+<p>This question is important because it can be a potentially useful indicator of a country’s quality of healthcare, as measured by health expenditures, in relation to malnourishment rates. Health expenditures can have a massive impact on malnourishment rates, because it could potentially be providing services and programs that address starvation, nutrition and diet, and malnourishment. </p>
 
-**Zach - What is the correlation between population under 5 and the major effects of malnourishment in low income countries?**
-<p>This is an important question as it can identify the age group of individuals affected by malnourishment and lead to more helpful action towards the issue. The dataset I found can answer this as it shows percentage of certain malnourishment effects as well as amount of age under 5 and a nation income rating. </p>
+**3. What is the correlation between population under 5 and the major effects of malnourishment in low income countries?**
+<p>This is an important question as it can identify the age group of individuals affected by malnourishment and lead to more helpful action towards the issue. The dataset we found can answer this as it shows percentage of certain malnourishment effects as well as amount of age under 5 and a nation income rating. </p>
 
 ## Section 3. The Data Sets
+
+1. [Total alcohol consumption per capita](https://data.worldbank.org/indicator/SH.ALC.PCAP.LI)
+- https://data.worldbank.org/indicator/SH.ALC.PCAP.LI
+- “The estimates for the total alcohol consumption are produced by summing up the 3-year average per capita (15+) recorded alcohol consumption and an estimate of per capita (15+) unrecorded alcohol consumption for a calendar year. Tourist consumption takes into account tourists visiting the country and inhabitants visiting other countries.” (World Health Organization, Global Health Observatory Data Repository)
+- Question 1
+
+2. [Prevalence of undernourishment](https://data.worldbank.org/indicator/SN.ITK.DEFC.ZS)
+- https://data.worldbank.org/indicator/SN.ITK.DEFC.ZS
+- “Data on undernourishment are from the Food and Agriculture Organization (FAO) of the United Nations and measure food deprivation based on average food available for human consumption per person, the level of inequality in access to food, and the minimum calories required for an average person.”(Food and Agriculture Organization)
+- All questions
+
+3. [Current health expenditure per capita](https://databank.worldbank.org/reports.aspx?source=2&series=SH.XPD.CHEX.PC.CD)
+- https://databank.worldbank.org/reports.aspx?source=2&series=SH.XPD.CHEX.PC.CD
+- “The health expenditure estimates have been prepared by the World Health Organization under the framework of the System of Health Accounts 2011 (SHA 2011). The Health SHA 2011 tracks all health spending in a given country over a defined period of time regardless of the entity or institution that financed and managed that spending. It generates consistent and comprehensive data on health spending in a country, which in turn can contribute to evidence-based policy-making.” (World Development Indicators)
+- Question 2
+
+4. [Malnutrition effects, country income, and population under 5](https://www.kaggle.com/ruchi798/malnutrition-across-the-globe)
+- https://www.kaggle.com/ruchi798/malnutrition-across-the-globe
+- Does not include methodology (UNICEF)
+- Question 3
+
+
+
 
 
 
