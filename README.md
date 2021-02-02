@@ -6,6 +6,10 @@
 This problem affects millions of people globally and can detriment their health long term. It also can result in developmental stunting among children as well as other chronic health issues.</p>
 <p>There are many studies available that discuss the impacts of malnutrition, listed below. In the Journal of Nutrition and Weight Loss, in depth research conducted in the Eastern Mediterrean region is analyzed to show the relation between child malnutrition and mortality. Another project done that relates to our problem domain is the “Zero Hunger” project conducted by the UN, which evaluates the societal conditions that exacerbate malnutrition and aims to bring awareness to the issue. </p>
 <p>We are examining this issue of malnutrition because of its many damaging ramifications that we previously mentioned. We would like to analyze the correlation between adult malnutrition and infant mortality rates, as well investigate its association with life expectancy. This is both a social and health crisis that has many implications and consequences on communities and individuals worldwide. </p>
+<p>**Malnutrition** - deficiencies, excesses or imbalances in one's intake of nutrients</p>
+<p>**Stunting** - impaired growth and development resulting from poor nutrition</p>
+<p>**Wasting** - the gradual degradation of bodily systems</p>
+
 
 - [Malnutrition in Children](https://data.unicef.org/topic/nutrition/malnutrition/)
 - [Journal of Nutrition and Weight Loss](https://www.longdom.org/open-access/indepth-analysis-of-mortality-in-relation-to-malnutrition-in-childrenunderfive-of-age-in-the-eastern-mediterranean-region.pdf)
