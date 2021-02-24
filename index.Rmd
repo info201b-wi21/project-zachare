@@ -1,0 +1,50 @@
+---
+title: "exploratory_index.Rmd"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+source("exploratory_report_analysis.R")
+```
+
+# Section 2
+The first dataset we will be using is a dataset of all the health expenditures per capita in each country. The second dataset we will be using includes the statistics on malnutrition amongst children aged 0-59 months, broken down by the four types of malnutrition: wasting, stunting, underweight, and overweight.
+
+The first dataset comes from data prepared by the World Health Organization. “The health expenditure estimates have been prepared by the World Health Organization under the framework of the System of Health Accounts 2011 (SHA 2011). The Health SHA 2011 tracks all health spending in a given country over a defined period of time regardless of the entity or institution that financed and managed that spending. It generates consistent and comprehensive data on health spending in a country, which in turn can contribute to evidence-based policy-making.” (World Development Indicators)
+Link: https://databank.worldbank.org/reports.aspx?source=2&series=SH.XPD.CHEX.PC.CD
+
+The second dataset comes from data compiled by Ruchi Bhatia, originally sourced from UNICEF. 
+Link: https://www.kaggle.com/ruchi798/malnutrition-across-the-globe
+
+Sample of the malnourishment dataset:
+```{r}
+knitr::kable(malnourishment_sample, format = "html")
+```
+
+Sample of the health expenditures dataset:
+```{r}
+knitr::kable(health_expenditures_sample, format = "html")
+```
+
+The malnourishment dataset has a fairly simple and straightforward structure. It breaks down each set of statistics by country. The sample includes only a few of these statistics, separated into the columns “Wasting”, “Overweight”, and “Underweight”. These columns describe the percentage of children aged 0-59 months who meet the criteria for these conditions. 
+1. Wasting: below -2 standard deviations from the median weight-for-height. 
+2. Overweightness: above 2 standard deviations from the median weight-for-height. 
+3. Underweightness: below -2 standard deviations from the median weight-for-age. 
+
+The health expenditures dataset, just like the malnourishment dataset, breaks down each set of statistics by country. The statistics associated with each country are broken down by year in separate columns, and describe the spending on health in a country during a particular year, in the unit current US dollars. The columns in the sample, 2017 and 2018, indicate the years 2017 and 2018, respectively, and contain the health expenditures of a country in that year. 
+
+# Section 3
+### Data science question 1: 
+Is there a correlation between a country's heath expenditures and their rate of malnourishment in the most recent year with available data? 
+
+This question is imploring as to whether there is a relationship between a country's health expenditures and their rate of malnutritioned children under 59 months. There will be either a positive correlation, meaning a higher health expenditure is associated with higher rates of malnutrition, a negative correlation, meaning a lower health expenditure is associated with higher rates of malnutrition, or no correlation. The rate of malnutrition refers to the total percentage of children who qualify for each type of malnutrition: wasting, stunting, overweight, and underweight. 
+
+My data analysis method starts with calculating the total malnutrition rate of each country's children. I did this by totaling the percentages in each column describing a type of malnutrition: severe wasting, wasting, stunting, overweight, and underweight. I then looked through the health expenditures data frame to determine that 2018 was the most recent year with available data. The next step in my method created a dataframe to use for the scatterplot by joining the health expenditures of 2018 with the newly-created column of total malnutrition rates, matched by country. Lastly, I used this dataframe to create a scatterplot comparing malnourishment rates to health expenditures, each "dot" on the scatterplot being a country. The scatterplot I produced is shown below:
+
+```{r part_2, echo=FALSE}
+plot(correlation_plot)
+```
+
+Evaluation: 
+It appears that there is no correlation between malnourishment rate and health expenditure of a country, which is surprising because I expected that higher health expenditures would be associated with lower rates of malnourishment. Logically, a country with higher health expenditures would likely be investing in better healthcare that addresses health issues such as malnourishment, so it seems like it should have a correlation with lower rates of malnourishment. However, according to this scatterplot, it shows no distinct relationship. The values are all dispersed throughout the plot, with no clear clustering in any direction. If there were a correlation, then the scatterplot should show at least a vague formation in a line. Because this is clearly not present in the scatterplot I produced, we can conclude that there is not a significant correlation between health expenditures and malnourishment rates. This indicates that increasing health expenditures, such as investing more in healthcare, will not necessarily lead to a decrease in malnourishment. 
