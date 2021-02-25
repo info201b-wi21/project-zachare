@@ -7,7 +7,7 @@ health_expenditures <- read.csv("https://raw.githubusercontent.com/info201b-wi21
 
 library("dplyr")
 library("tidyverse")
-library("ggplot")
+library("ggplot2")
 
 malnourishment_sample <- malnourishment %>%
   top_n(5) %>%
@@ -51,7 +51,7 @@ health_expenditures <- health_expenditures %>%
     "Country" = Country.Name
   )
 
-health_expenditures$Country.Name <-  toupper(health_expenditures$Country.Name)
+health_expenditures$Country <-  toupper(health_expenditures$Country)
 
 correlation_plot_df <- left_join(malnourishment, health_expenditures, by = c("Country")) %>%
   select(Country, total_malnourishment, "2018")
