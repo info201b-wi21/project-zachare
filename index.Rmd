@@ -1,6 +1,13 @@
+---
+title: "exploratory_index.Rmd"
+output: html_document
+---
+
+```{r setup, include=FALSE}
 library(knitr)
 source("exploratory_report_analysis.R")
 ```
+
 # Section 1: 
 
 Adult malnutrition is a severe humanitarian and public health issue that primarily affects developing countries. Malnutrition refers to one’s condition when they are lacking necessary nutrients, often due to inadequate food supply. Malnutrition compromises one’s immune system, making them more susceptible to disease and causes delayed recovery times. It also is associated with many societally damaging issues such as poverty, food insecurity, and mortality. This problem affects millions of people globally and can detriment their health long term. It also can result in developmental stunting among children as well as other chronic health issues.
