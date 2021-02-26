@@ -1,6 +1,4 @@
-library(knitr)
-source("exploratory_report_analysis.R")
-```
+
 
 # Section 2
 The first dataset we will be using is a dataset of all the health expenditures per capita in each country. The second dataset we will be using includes the statistics on malnutrition amongst children aged 0-59 months, broken down by the four types of malnutrition: wasting, stunting, underweight, and overweight.
