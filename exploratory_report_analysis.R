@@ -1,28 +1,10 @@
 # Section 3: Heather
 
-most_recent_year <- health_expenditures$year_2018
+malnourishment_df_graph <- malnourishment_df %>%
+  distinct(Country, .keep_all = T)
 
-malnourishment <- na.omit(malnourishment) %>%
-  mutate(
-    total_malnourishment = Severe.Wasting + Wasting + Overweight + Stunting + Underweight
-  )
-
-health_expenditures <- health_expenditures %>%
-  rename(
-    "Country" = Country.Name
-  )
-
-health_expenditures$Country <-  toupper(health_expenditures$Country)
-
-correlation_plot_df <- left_join(malnourishment, health_expenditures, by = c("Country")) %>%
-  select(Country, total_malnourishment, year_2018)
-
-correlation_plot <- ggplot(correlation_plot_df, aes(x = year_2018, y = total_malnourishment)) +
-  geom_point() +
-  ggtitle("Scatterplot of health expenditures and malnourishment rates") +
-  xlab("Health Expenditure (Current USD)") +
-  ylab("Malnourishment Rate") +
-  theme(
-    axis.text.x = element_blank(),
-    axis.text.y = element_blank())
-
+income_classification_graph <- ggplot(malnourishment_df_graph, aes(x = factor(Income.Classification))) +
+  geom_bar(stat = "count", fill = "steelblue") +
+  labs(title = "Number of Countries in each Income Classification",
+       x = "Income Classification",
+       y = "Number of Countries") 
