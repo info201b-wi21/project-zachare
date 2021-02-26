@@ -17,24 +17,24 @@ malnourishment_sample <- malnourishment %>%
   top_n(5) %>%
   select(Country, Wasting, Overweight, Underweight)
 
-health_expenditures_df <- health_expenditures_df %>%
+health_expenditures <- health_expenditures %>%
   rename(
-    "1990" = X1990..YR1990.,
-    "2000" = X2000..YR2000.,
-    "2011" = X2011..YR2011.,
-    "2012" = X2012..YR2012.,
-    "2013" = X2013..YR2013.,
-    "2014" = X2014..YR2014.,
-    "2015" = X2015..YR2015.,
-    "2016" = X2016..YR2016.,
-    "2017" = X2017..YR2017.,
-    "2018" = X2018..YR2018.,
-    "2019" = X2019..YR2019.,
-    "2020" = X2020..YR2020.
+    "year_1990" = X1990..YR1990.,
+    "year_2000" = X2000..YR2000.,
+    "year_2011" = X2011..YR2011.,
+    "year_2012" = X2012..YR2012.,
+    "year_2013" = X2013..YR2013.,
+    "year_2014" = X2014..YR2014.,
+    "year_2015" = X2015..YR2015.,
+    "year_2016" = X2016..YR2016.,
+    "year_2017" = X2017..YR2017.,
+    "year_2018" = X2018..YR2018.,
+    "year_2019" = X2019..YR2019.,
+    "year_2020" = X2020..YR2020.
   )
 
 health_expenditures_sample <- health_expenditures %>%
-  select(Country.Name, X2017..YR2017., X2018..YR2018.) %>%
+  select(Country.Name, year_2017, year_2018) %>%
   slice(1:3)
 
 # Section 2.2 - Malnutrition Data Frame ########################
