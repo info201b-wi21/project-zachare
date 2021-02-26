@@ -1,8 +1,3 @@
-# Section 2
-
-malnourishment_df <- read.csv("https://raw.githubusercontent.com/info201b-wi21/project-zachare/main/data/Malnutrition%20Effects/country-wise-average.csv?token=ASLWM4NANTQ3W277GORWSZTAHWFMO")
-health_expenditures_df <- read.csv("https://raw.githubusercontent.com/info201b-wi21/project-zachare/main/data/Health%20Expenditures/ae2e0043-4b54-4d83-af00-191617f8402b_Data.csv?token=ASLWM4KWCSH5B33LJMJPOTTAHWFRW")
-
 library('knitr')
 library('ggplot2')
 library('scales')
@@ -11,213 +6,209 @@ library('RColorBrewer')
 library('countrycode', exclude = "select")
 library('dplyr')
 library('tidyverse')
-library('gapminder')
 
-malnourishment_sample_df <- malnourishment_df %>%
+### Reading Health Expenditures dataset ###
+all_health_expenditures_df <- read.csv(
+  'https://raw.githubusercontent.com/info201b-wi21/project-zachare/main/data/Health%20Expenditures/ae2e0043-4b54-4d83-af00-191617f8402b_Data.csv?token=ASLWDXEFNW4YWYFQVXMAME3AHWH2U')
+names(all_health_expenditures_df) <- gsub("^X[0-9]{4}..YR([0-9]{4})\\.$","amount_\\1", names(all_health_expenditures_df))
+year_regex = "^(amount)_([0-9]{4})$"
+all_health_expenditures_df <- all_health_expenditures_df %>%
+  mutate(across(matches(year_regex), as.numeric))
+
+all_health_expenditures_sample_df <- all_health_expenditures_df %>%
   top_n(5) %>%
-  select(Country, Wasting, Overweight, Underweight)
+  select(Country.Name, amount_2017, amount_2018)
 
-health_expenditures_df <- health_expenditures_df %>%
-  rename(
-    year_1990 = X1990..YR1990.,
-    year_2000 = X2000..YR2000.,
-    year_2011 = X2011..YR2011.,
-    year_2012 = X2012..YR2012.,
-    year_2013 = X2013..YR2013.,
-    year_2014 = X2014..YR2014.,
-    year_2015 = X2015..YR2015.,
-    year_2016 = X2016..YR2016.,
-    year_2017 = X2017..YR2017.,
-    year_2018 = X2018..YR2018., 
-    year_2019 = X2019..YR2019.,
-    year_2020 = X2020..YR2020.,
-  )
+most_recent_year_health_expenditures <- all_health_expenditures_df$amount_2018
 
-health_expenditures_sample_df <- health_expenditures_df %>%
-  select(Country.Name, year_2017, year_2018) %>%
-  slice(1:3)
+### Summary stats for Health Expenditures ###
 
-most_recent_year <- health_expenditures_df$year_2018
+# get rid of rows that aren't individual countries (e.g., north america, arab world)
+health_expenditures_df <- all_health_expenditures_df %>% slice(1:217)
 
-malnourishment_df <- na.omit(malnourishment_df) %>%
-  mutate(
-    total_malnourishment = Severe.Wasting + Wasting + Overweight + Stunting + Underweight
-  )
+# calculate the average of every country's expenditure in 2000 and in 2018
+world_averages <- summarize(
+  health_expenditures_df, average_2018 = mean(amount_2018, na.rm = TRUE),
+  average_2018 = mean(amount_2018, na.rm = TRUE))
 
-health_expenditures_df <- health_expenditures_df %>%
-  rename(
-    "Country" = Country.Name
-  )
+# calculate the maximum expenditure of any country in 2000 and 2018
+world_max <- summarize(health_expenditures_df, max_2000 = max(amount_2000, na.rm = TRUE),
+                       max_2018 = max(amount_2018, na.rm = TRUE))
 
-health_expenditures_df$Country <-  toupper(health_expenditures_df$Country)
+### Health Expenditure change choropleth map ###
 
-correlation_plot_df <- left_join(malnourishment_df, health_expenditures_df, by = c("Country")) %>%
-  select(Country, total_malnourishment, year_2018)
+health_expenditures_rate_df <- health_expenditures_df %>%
+  mutate(expenditure_rate_change = (amount_2018 - amount_2000) / amount_2018) %>%
+  select(Country.Name, Country.Code, expenditure_rate_change)
 
-correlation_plot_df <- correlation_plot_df %>%
-  rename(
-    health_expenditure_2018 = year_2018
-  )
-
-correlation_plot <- ggplot(correlation_plot_df, aes(x = health_expenditure_2018, y = total_malnourishment)) +
-  geom_point() +
-  ggtitle("Scatterplot of health expenditures and malnourishment rates") +
-  xlab("Health Expenditure (Current USD)") +
-  ylab("Malnourishment Rate") +
-  theme(
-    axis.text.x = element_blank(),
-    axis.text.y = element_blank())
-
-# Section 2.2 - Malnutrition Data Frame ########################
-
-income_class_mean <- mean(malnourishment_df$Income.Classification)
-
-mean_u5_pop <- mean(malnourishment_df$U5.Population...000s.)
-
-mean_total_malnourish <- mean(malnourishment_df$total_malnourishment)
-
-max_total_malnourish <- max(malnourishment_df$total_malnourishment)
-
-max_u5_pop <- max(malnourishment_df$U5.Population...000s.)
-
-avg_sev_waste <- mean(malnourishment_df$Severe.Wasting)
-
-avg_waste <- mean(malnourishment_df$Wasting)
-
-avg_overweight <- mean(malnourishment_df$Overweight)
-
-avg_stunting <- mean(malnourishment_df$Stunting)
-
-avg_underweight <- mean(malnourishment_df$Underweight)
-
-avg_mal_effects <- c(avg_overweight, avg_sev_waste, avg_stunting, avg_underweight, avg_waste)
-
-mal_effects_names <- c("Overweight", "Severe Wasting", "Stunting", "Underweight", "Wasting")
-
-mal_df <- data.frame(mal_effects_names, avg_mal_effects)
-
-
-malnourishment_data_desc <- list(income_class_mean, mean_u5_pop, max_u5_pop, mean_total_malnourish, max_total_malnourish)
-
-malnourishment_dens <- malnourishment_df %>% 
-  ggplot(aes(x = total_malnourishment)) + geom_density(fill="#69b3a2", color = "#0000FF", alpha = 0.8) + labs(x = "Total malnourishment effects", y= "Density", title = "Density Graph of Total Malnourishment Effects")
-
-mal_effects_pie <- ggplot(mal_df, aes(x = "", y = avg_mal_effects, fill = mal_effects_names)) +
-  geom_bar(stat="identity", width=1, color="white") +
-  coord_polar("y", start=0) + theme_void() + labs(title = "Effects of Malnutrition", fill = "Effects")
-
-mal_bubble <- ggplot(malnourishment_df, aes(x=Income.Classification, y= total_malnourishment, size = U5.Population...000s.)) +
-  geom_point(alpha=0.7) + labs(title = "Malnourishment by Income and Population", y = "Total Malnourishment", x = "Income Classification (0 = lowest, 3 = highest)", size = "Population Under 5 (by thousands)") 
-
-
-# Section 2.2 - Health Expenditure Data Frame
-
-# convert the character data into numeric
-health_expenditures_df <- health_expenditures_df %>% 
-  mutate_at(.vars=c(6:16),.funs=funs(as.numeric(.)), na.rm = TRUE)
-
-# get rid of rows that aren't individual countries (e.g., north america, arab world) 
-health_expenditures_2_df <- health_expenditures_df %>% slice(1:217)
-
-# calculate the average expenditure of the world in 2000, 2011, 2018
-world_averages <- summarize(health_expenditures_2_df, 
-                            average_2000 = mean(year_2000, na.rm = TRUE), 
-                            average_2011 = mean(year_2011, na.rm = TRUE),
-                            average_2018 = mean(year_2018, na.rm = TRUE))
-
-# calculate the maximum expenditure of any country in 2000, 2011, and 2018
-world_max <- summarize(health_expenditures_df, 
-                       max_2000 = max(year_2000, na.rm = TRUE), 
-                       max_2011 = max(year_2011, na.rm = TRUE),
-                       max_2018 = max(year_2018, na.rm = TRUE))
-
-# calculate the minimum expenditure of any country in 2000, 2011, and 2018
-world_min <- summarize(health_expenditures_df, 
-                       min_2000 = min(year_2000, na.rm = TRUE), 
-                       min_2011 = min(year_2011, na.rm = TRUE), 
-                       min_2018 = min(year_2018, na.rm = TRUE))
-
-########################
-
-# calculate the rate change between 2000 and 2018 for each country
-health_expenditures_rate_df <- health_expenditures_df %>% 
-  mutate(expenditure_rate_change = (year_2018 - year_2000) / year_2018) %>%
-  select(Country, expenditure_rate_change, Country.Code)
-
-# join the world data with the mutated data frame
 worldData <- map_data('world') %>%
   mutate(Country.Code = countrycode(region, origin = 'country.name', destination = 'iso3c')) %>%
-  mutate(Country.Code = case_when(region == 'Kosovo' ~ 'XKX', TRUE ~ Country.Code)) %>%
+  mutate(Country.Code = case_when(region == 'Kosovo' ~ 'XKX', 
+                                  TRUE ~ Country.Code)) %>%
   inner_join(health_expenditures_rate_df, by="Country.Code")
-
 
 blank_theme <- theme_bw() +
   theme(
-    axis.line = element_blank(),      
-    axis.text = element_blank(),        
-    axis.ticks = element_blank(),      
-    axis.title = element_blank(),       
-    panel.background = element_rect(fill = 'lightgrey'),  
-    panel.grid.major = element_blank(), 
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    axis.title = element_blank(),
+    panel.background = element_rect(fill = 'darkgrey'),
+    panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
-    panel.border = element_blank()     
+    panel.border = element_blank()
   )
 
-
-expenditure_rate_change_plot <- ggplot(worldData) + 
-  geom_polygon(mapping = aes(x = long, y = lat, group = group, fill = expenditure_rate_change),
-               color = "gray", size = .05) + coord_map(xlim=c(-180,180)) +
-  scale_fill_gradientn(colours = rev(brewer.pal(9, name="YlGn")), labels = percent) + 
-  labs(title="Expenditure (per capita) Rate Change from 2000 to 2018", caption = "", fill = "Change %") + 
+expenditure_rate_change_plot <- ggplot(worldData) +
+  geom_polygon(mapping = aes(x = long, y = lat, group = group, fill=expenditure_rate_change),
+               color = "grey", size = .05) + coord_map(xlim=c(-180, 180)) +
+  scale_fill_gradientn(colours = brewer.pal(9, name="YlGn"), labels = percent) +
+  labs(title="Health Expenditure in USD (per capita) change from 2000 to 2018", caption = "", fill = "Change %") +
   blank_theme
 
 plot(expenditure_rate_change_plot)
 
-# the two outlier countries here are Venezuela and democratic republic of Congo. 
+### Bar Graph of 10 countries with highest health expenditures ###
 
-##########################
+health_expenditures_top_10 <- health_expenditures_df %>% 
+  select(Country.Name, amount_2018) %>%
+  arrange(desc(amount_2018)) %>% 
+  mutate(Country.Name = factor(Country.Name, levels=rev(Country.Name))) %>%
+  head(10)
 
-# obtain the countries with the top 10 health expenditures in 2018
-health_expenditures_top_10 <- health_expenditures_2_df %>% select(Country, year_2018) %>% 
-  arrange(desc(year_2018)) %>% head(10)
-
-# save the top 10 countries in a vector to preserve the order
-ordered_list_of_countries <- health_expenditures_top_10 %>% pull(Country)
-
-top_10_expenditures_plot <- ggplot(data=health_expenditures_top_10, 
-                                   aes(reorder(ordered_list_of_countries, year_2018, sum), year_2018)) + coord_flip() +
-  geom_bar(stat="identity", position=position_dodge(-0.9), fill = "#144f15") +
-  labs(title="Countries With Highest Health Expenditures (per capita) in 2018",
-       x ="Country", y = "Health Expenditure (per capita) in US $", fill = "") +
-  scale_fill_discrete(guide = "none")
-
+top_10_expenditures_plot <- ggplot(data=health_expenditures_top_10,
+                                   aes(x=amount_2018, y=Country.Name)) +
+  geom_bar(stat="identity", fill="steelblue", position=position_dodge(-0.9)) +
+  geom_text(aes(label=comma(round(amount_2018, digits = 0))), hjust=1.2, color="white", size=3.5) +
+  scale_x_continuous(labels = comma) + 
+  labs(title="Countries With Highest Health Expenditures in 2018",
+       y ="Country", x = "Health Expenditure in USD (per capita)", fill = "")
 
 plot(top_10_expenditures_plot)
 
-###########################
+### Health Expenditures trends for different countries ###
 
-# simplify the data to only what will be used in the plot
-average_trend_df <- health_expenditures_df %>%
-  select(Country, (7:14)) %>% 
-  filter(Country %in% c("World", "Russia", "United States", "China", "India", "Japan", 
-                             "Germany", "Israel", "Brazil"))
+countries = c("World", "Russian Federation", "United Kingdom", "Germany", "France", "Japan", "Israel", "United States", "China", "India")
+country_trends_df <- all_health_expenditures_df %>%
+  pivot_longer(cols = matches(year_regex), 
+               names_pattern = year_regex,
+               names_to = c(".value", "year")
+  ) %>% 
+  select(Country.Name, Country.Code, year, amount) %>%
+  mutate(year = as.numeric(year))
 
-pivoted_average_trend_df <- average_trend_df %>%
-  pivot_longer(cols = (year_2011:year_2018), names_to = "years", ".value") %>%
-  arrange(years)
+start_year = 2011
+end_year = 2018
+country_trend_plot <-
+  ggplot(data=country_trends_df %>% 
+           filter(Country.Name %in% countries) %>%
+           mutate(Country.Name = factor(Country.Name, levels=countries)), 
+         aes(x=year, y=amount, group=Country.Name)) +
+  geom_line(aes(color=Country.Name)) +
+  geom_point(aes(color=Country.Name)) +
+  scale_colour_brewer(labels=countries, palette = "Paired") +
+  labs(title=sprintf("Health Expenditure in USD (per capita) from %d to %d", start_year, end_year),
+       x ="Year", y = "Health Expenditure in USD (per capita)", color = "Country") +
+  scale_x_continuous(limits = c(start_year, end_year)) +
+  scale_y_continuous(label=comma)
 
-years <- c("2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018")
+plot(country_trend_plot)
 
-labels <- c("World", "Russia", "United States", "China", "India", "Japan", 
-            "Germany", "Israel", "Brazil")
-average_trend_plot <- 
-  ggplot(data=pivoted_average_trend_df, aes(x=years, y=value, group=Country)) +
-  geom_line(aes(color=Country)) +
-  geom_point(aes(color=Country)) +
-  scale_colour_brewer(labels=labels, palette = "Dark2") +
-  labs(title="Average Health Expenditure Over Time",
-       x ="Year", y = "Health Expenditure (per capita) US $", color = "Country") 
+### Health Expenditure/Malnourishment correlation plot ###
 
-plot(average_trend_plot)
+malnourishment_df <- read.csv("https://raw.githubusercontent.com/info201b-wi21/project-zachare/main/data/malnutrition-estimates%20(1).csv?token=ASLWDXDCP5ZFM5WZEXBKM5LAIHHAE")
+malnourishment_sample_df <- malnourishment_df %>%
+  top_n(5) %>%
+  select(Country, Year, Wasting, Overweight, Underweight, Stunting)
 
-##################################
+start_year = 2011
+end_year = 2018
+
+categories = c("Wasting", "Overweight", "Underweight", "Stunting")
+health_expenditures_average_rate_df <- health_expenditures_df %>%
+  pivot_longer(cols = matches(year_regex), 
+               names_pattern = year_regex,
+               names_to = c(".value", "year")
+  ) %>% 
+  select(Country.Name, Country.Code, year, amount) %>%
+  rename(average_health_expenditure = amount) %>%
+  mutate(year = as.numeric(year)) %>%
+  filter(year %in% (start_year:end_year)) %>%
+  group_by(Country.Code, Country.Name) %>%
+  summarize(average_health_expenditure = mean(average_health_expenditure, na.rm = TRUE), .groups="drop")
+
+malnourishment_average_df <- malnourishment_df %>%
+  rename(Country.Code = ISO.code) %>%
+  filter(Year %in% (start_year:end_year)) %>%
+  group_by(Country.Code) %>%
+  summarize(Wasting = mean(Wasting, na.rm = TRUE),
+            Overweight = mean(Overweight, na.rm = TRUE),
+            Underweight = mean(Underweight, na.rm = TRUE),
+            Stunting = mean(Stunting, na.rm = TRUE),
+            Income.Classification = mean(Income.Classification, na.rm = TRUE),
+            U5.Population...000s. = mean(U5.Population...000s., na.rm = TRUE))
+
+pivot_malnourishment_average_df <- malnourishment_average_df %>%
+  pivot_longer(cols = all_of(categories),
+               names_to = "category",
+               values_to = "rate") 
+
+correlation_plot_df <- health_expenditures_average_rate_df %>%
+  left_join(pivot_malnourishment_average_df, by = c("Country.Code")) %>%
+  select(Country.Name, category, rate, average_health_expenditure) %>%
+  mutate(category = factor(category, levels=categories)) %>%
+  na.omit()
+
+correlation_plot <- ggplot(correlation_plot_df,
+                           aes(x = average_health_expenditure, y = rate, group = category)) +
+  geom_point(aes(color=category), alpha = 0.15) +
+  geom_quantile(aes(color=category), method = "rqss", lambda = 0.3, quantiles = 0.5, size=0.75) + 
+  scale_colour_brewer(labels=categories, palette = "Dark2") +
+  labs(title="Correlation of Countries' Health Expenditures and Malnourishment Rates",
+       x ="Health Expenditure in USD (per capita)", y = "Malnourishment Rates in %", color = "Malnourishment\nCategory") +
+  scale_x_continuous(labels = comma) +
+  scale_y_continuous(limits = c(0.0, 60.0))
+
+correlation_plot
+
+### Malnourishment summary stats and 2 graphs ###
+
+income_class_mean <- mean(malnourishment_average_df$Income.Classification, na.rm=TRUE)
+mean_u5_pop <- mean(malnourishment_average_df$U5.Population...000s., na.rm=TRUE)
+mean_wasting <- mean(malnourishment_average_df$Wasting, na.rm=TRUE)
+mean_underweight <- mean(malnourishment_average_df$Underweight, na.rm=TRUE)
+mean_overweight <- mean(malnourishment_average_df$Overweight, na.rm=TRUE)
+mean_stunting <- mean(malnourishment_average_df$Stunting, na.rm=TRUE)
+
+max_u5_pop <- max(malnourishment_average_df$U5.Population...000s., na.rm=TRUE)
+max_wasting <- max(malnourishment_average_df$Wasting, na.rm=TRUE)
+max_underweight <- max(malnourishment_average_df$Underweight, na.rm=TRUE)
+max_overweight <- max(malnourishment_average_df$Overweight, na.rm=TRUE)
+max_stunting <- max(malnourishment_average_df$Stunting, na.rm=TRUE)
+
+avg_mal_effects <- c(mean_overweight, mean_stunting, mean_underweight, mean_wasting)
+
+mal_effects_names <- c("Overweight", "Stunting", "Underweight", "Wasting")
+
+mal_df <- data.frame(mal_effects_names, avg_mal_effects)
+
+malnourishment_data_desc <- list(income_class_mean, mean_u5_pop, max_u5_pop, 
+                                 mean_overweight, max_overweight, 
+                                 mean_stunting, max_stunting,
+                                 mean_underweight, max_underweight,
+                                 mean_wasting, max_wasting)
+
+overweight_density <- malnourishment_average_df %>% 
+  ggplot(aes(x = Overweight)) + 
+  geom_density(fill="#69b3a2", color = "#0000FF", alpha = 0.8) + 
+  labs(x = "Overweight rate in %", y = "Density", title = "Overweight Rate Distribution Density Plot")
+
+# mal_effects_pie <- ggplot(mal_df, aes(x = "", y = avg_mal_effects, fill = mal_effects_names)) +
+#   geom_bar(stat="identity", width=1, color="white") +
+#   coord_polar("y", start=0) + theme_void() + labs(title = "Effects of Malnutrition", fill = "Effects")
+
+stunting_bubble <- ggplot(malnourishment_average_df, aes(x=Income.Classification, y = Stunting, size = U5.Population...000s.)) +
+  geom_point(alpha=0.7, color = "darkgreen") + 
+  labs(title = "Stunting Rate by Income and Population", y = "Stunting rate in %", 
+       x = "Income Classification (0 = lowest, 3 = highest)", size = "Population Under 5 (in thousands)") + 
+  scale_size_continuous(labels = comma)
