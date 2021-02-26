@@ -1,15 +1,28 @@
 # Section 3
 ### Data science question 1: 
-Is there a correlation between a country's heath expenditures and their rate of malnourishment in the most recent year with available data? 
+What is the distribution of country counts across the range of income classifications? 
 
-This question is imploring as to whether there is a relationship between a country's health expenditures and their rate of malnutritioned children under 59 months. There will be either a positive correlation, meaning a higher health expenditure is associated with higher rates of malnutrition, a negative correlation, meaning a lower health expenditure is associated with higher rates of malnutrition, or no correlation. The rate of malnutrition refers to the total percentage of children who qualify for each type of malnutrition: wasting, stunting, overweight, and underweight. 
+This question is examining the distribution of countries across the income classifications, which range from 0-3. This question seeks to determine which income classification has the highest number of countries, and which income classification has the lowest. 
 
-My data analysis method starts with calculating the total malnutrition rate of each country's children. I did this by totaling the percentages in each column describing a type of malnutrition: severe wasting, wasting, stunting, overweight, and underweight. I then looked through the health expenditures data frame to determine that 2018 was the most recent year with available data. The next step in my method created a dataframe to use for the scatterplot by joining the health expenditures of 2018 with the newly-created column of total malnutrition rates, matched by country. Lastly, I used this dataframe to create a scatterplot comparing malnourishment rates to health expenditures, each "dot" on the scatterplot being a country. The scatterplot I produced is shown below:
+My data analysis method starts with wrangling the data to only include each country as one observation (in the original dataframe, most countries are listed multiple times due to several different observation years). Because income classification remains the same across all these years for each country, I was able to simply remove duplicates of country names so that each country was only included as one observation. Next, I made the bar plot of counts using ggplot by including the built-in “stat” argument to have the height of the bar represent the count of cases within each income classification. 
 
 ```{r part_2, echo=FALSE}
-plot(correlation_plot)
+plot(income_classification_graph)
 ```
 
 Evaluation: 
-It appears that there is no correlation between malnourishment rate and health expenditure of a country, which is surprising because I expected that higher health expenditures would be associated with lower rates of malnourishment. Logically, a country with higher health expenditures would likely be investing in better healthcare that addresses health issues such as malnourishment, so it seems like it should have a correlation with lower rates of malnourishment. However, according to this scatterplot, it shows no distinct relationship. The values are all dispersed throughout the plot, with no clear clustering in any direction. If there were a correlation, then the scatterplot should show at least a vague formation in a line. Because this is clearly not present in the scatterplot I produced, we can conclude that there is not a significant correlation between health expenditures and malnourishment rates. This indicates that increasing health expenditures, such as investing more in healthcare, will not necessarily lead to a decrease in malnourishment. 
+The bar graph reveals that income classification “2” has the highest country count, around approximately 55, and income classification “3” has the lowest country count, at just above 20. It appears that the majority of countries lie in the middle of the distribution of income classifications, across classification “1” and “2”. 
 
+### Data science question 2: 
+What is the distribution of countries across the range of health expenditures? Does this distribution map onto the distribution of income classifications? 
+
+This question is examining the distribution of countries across the range of health expenditures, which range from 102 to 994. This question further seeks to examine whether this distribution correlates to the distribution of income classifications. 
+
+My data analysis method starts with wrangling the data to join our two datasets together in order to evaluate both the income classification and the health expenditures in the same dataset. I used the health expenditure data from 2018 because that was the most recent year with data. I arranged the dataset by income classification so that it follows the same order as the income classification graph, and made the bar graph using the stat function again, very similarly to the income classification graph. 
+
+```{r part_2, echo=FALSE}
+plot(health_expenditures_graph)
+```
+
+Evaluation: 
+The bar graph reveals that the distribution of health expenditures varies a good amount. It looks like the health expenditure amount with the highest frequency of countries is 994, which also happens to be the highest health expenditure amount. This is fairly surprising when compared to the income classification distribution, since income classification 3 has the lowest frequency of countries. You would expect that primarily the countries in income classification 3 would have higher health expenditures, so the distributions would look similar. However, this distribution of health expenditures does not seem to have a distinct pattern that correlates with the income classification distribution, and looks pretty evenly dispersed. This indicates that there is not a correlation between income classification and health expenditures. 
