@@ -30,18 +30,22 @@ The health expenditures dataset, just like the malnourishment dataset, breaks do
 ```{r, echo = FALSE}
 knitr::kable(overweight_density, format = "html")
 ```
-This shows the global averages of various malnourishment effects.
+This graph shows the distribution of the rates of overweightness by country. As can be seen on the graph, majority of countries have an overweight rate between 0 and 10%.
 
 ```{r, echo = FALSE}
 knitr::kable(mal_effects_bar, format = "html")
 ```
+This graph shows the global averages of rates of the different types of malnourishment in the dataset. Stunting is, by far, the most common form of malnourishment globally.
 
 ```{r, echo = FALSE}
 knitr::kable(stunting_bubble, format = "html")
 ```
+This graph displays the stunting rate percentage by income classification with 0 representing the poorest countries and 3 representing the richest countries. There is also each plot size that represents the population under 5 in each country. It can be seen that there is a declining correlation between the stunting prevalency and income classification.
 
 ```{r, echo = FALSE}
 kable(knit_mal_df)
 ```
+
+This shows the global averages of various malnourishment effects.
 
 Bangladesh displays outliers in both stunting in the underweight category. It also has one of the largest under 5 populations in this dataset. South Sudan is also an outlier for the severe wasting and wasting categories. These could obviously skew the data in the respective categories but especially in the case of Bangladesh when weighting the population as it has one of the highest. The greatest outliers are within the population. The max is `r max_u5_pop` and the mean is `r mean_u5_pop` There is a portion of the data where the population is above 80,000 (by thousands) and then there is a large break down to below 30,000. In some evaluations this can alter the effects towards countries with larger populations and make false correlations that may be due to factors only present in those countries.
