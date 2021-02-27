@@ -1,1 +1,196 @@
+---
+title: "Exploratory Report"
+author: "Liza Volozin, Heather Yang, and Zachary Grieser"
+date: "2/26/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library('knitr')
+library('ggplot2')
+library('scales')
+library('maps')
+library('RColorBrewer')
+library('countrycode', exclude = "select")
+library('dplyr')
+library('tidyverse')
+source("analysis.R")
+```
+
+## Section 1: Problem Domain Description
+
+<p>Adult malnutrition is a severe humanitarian and public health issue that primarily affects developing countries. Malnutrition refers to one’s condition when they are lacking necessary nutrients, often due to inadequate food supply. Malnutrition compromises one’s immune system, making them more susceptible to disease and causes delayed recovery times. It also is associated with many societally damaging issues such as poverty, food insecurity, and mortality. 
+This problem affects millions of people globally and can detriment their health long term. It also can result in developmental stunting among children as well as other chronic health issues.</p>
+<p>There are many studies available that discuss the impacts of malnutrition, listed below. In the Journal of Nutrition and Weight Loss, in depth research conducted in the Eastern Mediterranean region is analyzed to show the relation between child malnutrition and mortality. Another project done that relates to our problem domain is the “Zero Hunger” project conducted by the UN, which evaluates the societal conditions that exacerbate malnutrition and aims to bring awareness to the issue. </p>
+<p>We are examining this issue of malnutrition because of its many damaging ramifications that we previously mentioned. We would like to analyze the correlation between child malnutrition and health expenditures.This is both a social and health crisis that has many implications and consequences on communities and individuals worldwide. </p>
+<p>Malnutrition - deficiencies, excesses or imbalances in one's intake of nutrients</p>
+<p>Stunting - impaired growth and development resulting from poor nutrition</p>
+<p>Wasting - the gradual degradation of bodily systems</p>
+
+
+- [Malnutrition in Children](https://data.unicef.org/topic/nutrition/malnutrition/)
+- [Journal of Nutrition and Weight Loss](https://www.longdom.org/open-access/indepth-analysis-of-mortality-in-relation-to-malnutrition-in-childrenunderfive-of-age-in-the-eastern-mediterranean-region.pdf)
+- [An End to Malnutrition](https://www.un.org/zerohunger/content/end-malnutrition)
+
+## Section 2: Data Description
+
+The first dataset we will be using is a dataset of all the health expenditures per capita in each country. The second dataset we will be using includes the statistics on malnutrition amongst children aged 0-59 months, broken down by the four types of malnutrition: wasting, stunting, underweight, and overweight.
+
+The health expenditure data set is derived from data prepared by the World Health Organization. “The health expenditure estimates have been prepared by the World Health Organization under the framework of the System of Health Accounts 2011 (SHA 2011). The Health SHA 2011 tracks all health spending in a given country over a defined period of time regardless of the entity or institution that financed and managed that spending. It generates consistent and comprehensive data on health spending in a country, which in turn can contribute to evidence-based policy-making.” (World Development Indicators)
+Link: https://databank.worldbank.org/reports.aspx?source=2&series=SH.XPD.CHEX.PC.CD
+
+The second dataset comes from data compiled by Ruchi Bhatia, originally sourced from UNICEF. 
+Link: https://www.kaggle.com/ruchi798/malnutrition-across-the-globe
+
+**Sample of the malnourishment dataset:**
+```{r malnourishment_sample, echo=FALSE, warning=FALSE}
+kable(malnourishment_sample)
+```
+
+**Sample of the health expenditures dataset:**
+```{r all_health_expenditures_sample_df, echo=FALSE, warning=FALSE}
+kable(all_health_expenditures_sample_df, 
+      col.names = c("Country", "2017", "2018"))
+```
+
+The malnourishment dataset has a fairly simple and straightforward structure. It breaks down each set of statistics by country. The sample includes only a few of these statistics, separated into the columns “Wasting”, “Overweight”, and “Underweight”, and "Stunting". These columns describe the percentage of children aged 0-59 months who meet the criteria for these conditions.<p>
+1. Wasting: below -2 standard deviations from the median weight-for-height.<br> 
+2. Overweightness: above 2 standard deviations from the median weight-for-height. <br>
+3. Underweightness: below -2 standard deviations from the median weight-for-age.<br>
+4. Stunting: below -2 standard deviations from median height-for-age. <br>
+
+The health expenditures dataset, just like the malnourishment dataset, breaks down each set of statistics by country. The statistics associated with each country are broken down by year in separate columns, and describe the spending on health in a country during a particular year, in the unit current US dollars. The columns in the sample, year 2017 and year 2018, indicate the years 2017 and 2018, respectively, and contain the health expenditures (per capita) of a country in that year. 
+
+
+### Section 2.2: Summary Analysis - Health Expenditure Data
+
+**Summary Statistics: **
+
+```{r summary_statistics, echo = FALSE, warning = FALSE}
+kable(summary_statistics_df,
+      col.names = c("", "mean", "max", "min"))
+```
+
+
+<p>The first row is the mean health expenditure per capita for all the countries in the world for the years of 2000, 2011, and 2018. The bottom two rows display the minimum and maximum health expenditures per capita of any country for these years. 
+
+
+```{r expenditure_rate_change_plot, echo = FALSE, warning = FALSE}
+plot(expenditure_rate_change_plot)
+```
+
+<p>According to this choropleth map, the majority of countries around the world saw a 0% to 700% increase in their health expenditures between the years of 2000 and 2018. The outliers in this data are Venezuela, the Democratic Republic of Congo, China, Myanmar, and Ecuador. The health expenditures of Venezuela and the Democratic Republic of Congo fell 27.65% and 0.59%, respectively. This is likely due to political turmoil, which weakened their health infrastructures. The health expenditures of China, Myanmar, and Ecuador rose 1,089.81%, 1,265.65%, and 977.94%, respectively. The most important factors that contributed to this are likely improving health and living standards. Since the data displays each country's statistics individually, outliers do not impact the results. 
+
+```{r top_10_expenditures_plot, echo = FALSE, warning = FALSE}
+plot(top_10_expenditures_plot)
+```
+
+<p>The bar graph reveals that the United States had the largest health expenditure per capita in 2018, followed by Switzerland and Norway. Since the data displays each country's statistics individually, outliers do not impact the result. 
+
+```{r country_trend_plot, echo = FALSE, warning = FALSE}
+plot(country_trend_plot)
+```
+
+<p>The line graph exposes the United States as being an outlier in regard to health expenditure trends between 2011 and 2018. While most of the countries' health expenditures on the graph fluctuated between 0 and 6,000 USD per capita, the United States saw a constant increase of health expenditure throughout these years (from 8130.76 USD to 10,623.85 USD). The magnitude and range of the increase of the health expenditure of the United States increases the average expenditure of the world, which is important to take into account in a world-level analysis.  
+
+### Section 2.2: Summary Analysis - Malnourishment Data
+
+**Summary Statistics:**
+
+```{r knit_mal_df, echo = FALSE, warning=FALSE}
+kable(knit_mal_df, col.names = c("Malnutrition Effect", "Global Average Rate"))
+```
+
+This shows the global averages of various malnourishment effects.
+git brancg
+```{r overweight_density, echo=FALSE, warning=FALSE}
+plot(overweight_density)
+```
+
+This graph shows the distribution of the rates of overweightness by country. As can be seen on the graph, majority of countries have an overweight rate between 0 and 10%.
+
+```{r malnourishment_categories_bar, echo = FALSE, warning=FALSE}
+plot(malnourishment_categories_bar)
+```
+
+This graph shows the global averages of rates of the different types of malnourishment in the dataset. Stunting is, by far, the most common form of malnourishment globally.
+
+```{r stunting_bubble, echo = FALSE, warning=FALSE}
+plot(stunting_bubble)
+```
+
+This graph displays the stunting rate percentage by income classification with 0 representing the poorest countries and 3 representing the richest countries. There is also each plot size that represents the population under 5 in each country. It can be seen that there is a declining correlation between the stunting prevalency and income classification.
+
+
+Bangladesh displays outliers in both stunting in the underweight category. It also has one of the largest under 5 populations in this dataset. South Sudan is also an outlier for the severe wasting and wasting categories. These could obviously skew the data in the respective categories but especially in the case of Bangladesh when weighting the population as it has one of the highest. The greatest outliers are within the population. The max is `r max_u5_pop` and the mean is `r mean_u5_pop`. There is a portion of the data where the population is above 80,000 (by thousands) and then there is a large break down to below 30,000. In some evaluations this can alter the effects towards countries with larger populations and make false correlations that may be due to factors only present in those countries.
+
+## Section 3: Specific Question Analyses
+
+### Are there correlations between health expenditures and each of the manourishment categories?
+
+The four malnourishment categories referred to in this question are:<p>
+1. Stunting - % of children aged 0-59 months who are at least two standard deviations below the median height-for-age.<br>
+2. Overweight - % of children 0-59 months who are at least two standard deviations above the median weight-for-height.<br>
+3. Underweight - % of children 0-59 months who are at least two standard deviations below the median weight-for-age.<br>
+4. Wasting - % of children aged 0-59 months who are at least two standard deviations below the median weight-for-height.<br>
+
+**Data analysis method:**
+<p>First, the average health expenditure for each country across the years of 2011 to 2018 was calculated. This data frame was joined with one that contained the average rate for each of the malnourishment categories (wasting, overweight, underweight, and stunting) for the same years. This new data frame was then pivoted and the data was plotted on a scatterplot along with median regression curves. Median regression was chosen to avoid the impact of outliers.
+
+
+```{r correlation_plot_table, echo = FALSE, warning = FALSE}
+kable(correlation_plot_df[1:8, 1:4 ],
+       col.names = c("Country", "Malnourishment Category", "Rate in %", "Average Health Expenditure in USD (per capita)"))
+ ```
+
+
+```{r correlation_plot, echo = FALSE, warning = FALSE, message=FALSE}
+plot(correlation_plot)
+```
+
+<p>The data reveals a correlation between health expenditure and each of the 4 malnourishment categories. Ideally, we should have used mean or median income as the independent variable, but using health expenditures is also meaningful as it is intuitively a good proxy for the wealth of the nation and can also be used in further analyses. The rates of stunting, underweight, and wasting all show a strong inverse correlation with health expenditure, where the lowest health expenditures are associated with the highest rates in these three categories. An interesting thing to note is that the rate of 'overweight' does not necessarily follow the same trend as the other three malnourishment categories. The rate for this category increases as health expenditure increases and later plateaus/declines slightly. It can be assumed that countries with low health expenditures aren't able to spend much on food, and slightly wealthier countries can spend a little more. However, since unhealthy food is cheaper than healthy food, they end up eating more unhealthy food which contributes to their 'overweight' rate. Also, for some people in wealthy countries, easy access to food means overeating.  
+
+### What is the distribution of country counts across the range of income classifications? 
+
+This question is examining the distribution of countries across the income classifications, which range from 0-3. This question seeks to determine which income classification has the highest number of countries, and which income classification has the lowest. 
+
+**Data analysis method:**
+<p>First, the data was wrangled to include each country as only one observation (in the original dataframe, most countries are listed multiple times due to several different observation years). Because income classification remains the same across all these years for each country, duplicates of country names could be removed so that each country was only included as one observation. Next, the bar plot was made by including the built-in “stat” argument to have the height of the bar represent the count of cases within each income classification.
+
+```{r income_classification_graph, echo=FALSE, warning=FALSE}
+plot(income_classification_graph)
+```
+
+<p>The bar graph reveals that income classification “2” has the highest country count, around approximately 55, and income classification “3” has the lowest country count, at just above 20. It appears that the majority of countries lie in the middle of the distribution of income classifications, across classification “1” and “2”.
+
+### What is the distribution of countries across the range of health expenditures? Does this distribution map onto the distribution of income classifications? 
+
+<p>This question is examining the distribution of countries across the range of health expenditures, which have a large range from the 100s to over 10,000. This question further seeks to examine whether this distribution correlates to the distribution of income classifications. 
+
+**Data analysis method:**
+<p>The first step was to remove duplicate observations of the same country and filter for the most recent year with data, which is 2018. Additionally, all of the health expenditure values had to be changed into continuous variables because they were originally inputted as characters instead of integers or doubles. Because every country had different health expenditures, vector binning was used to generalize the health expenditure values into smaller ranges. A log scale was used for the bucket sizes. 
+
+```{r health_expenditures_graph, echo=FALSE, warning=FALSE}
+plot(health_expenditures_graph)
+```
+
+<p>The bar graph reveals that the distribution of health expenditures is skewed right, meaning the majority of values lie in lower health expenditure values. It appears that most countries have a health expenditure of 200-500. This somewhat resembles the distribution of income classifications as both bar charts are relatively symmetrical. This shows that there is a loose correlation between income classification and health expenditure, but it may not be statistically significant. Furthermore, the data for this plot could look very different with different bucket sizes, so a more in depth analysis would have to be done to determine a true relationship between these features. 
+
+### Is there a correlation between countries' health expenditures and their average rate of overweightness for their population under 5?
+
+This question is examining if there is any correlation between money spent on health and rates of overweightness in individuals under 5. Overweightness can be caused by both under and overnourishment.
+
+**Data analysis method:**
+<p>The first step was to get rid of all of the NA values in the malnourishment data frame. Then, the only columns of interest are selected. Next, the data was grouped by ISO.code and the overweight percentage and populations under 5 were averaged (using only vales between the years of 2011 and 2018). The data was then joined with the health expenditure data by ISO.code and plotted.
+
+```{r overweight_expenditure_plot, echo=FALSE, warning=FALSE}
+plot(overweight_expenditure_plot)
+```
+
+<p>After evaluation, I've determined there is a correlation between average overweightness and average health expenditures. I determined this quantitatively by running a correlation test on my data and checking the p-value. The p-value was 0.8755 which is very high and highly suggests there is a strong correlation in the data. This means there is an 88% chance that I would get data at least this extreme if the null hypothesis is true. I also found this graphically by plotting the data in a scatter bubble plot and also showing a regression line. The reason I performed this specific test was to maybe show an opposite correlation with what we have been previously seeing with other effects of malnourishment (lower expenditures results in more people effected). I figured overweightness may be more prevalent in richer countries due to surplus of food and supply. It shows that there is a high positive correlation between these two variables meaning higher expenditures does result in higher rates of overweightness.
+
+
+
+
 
