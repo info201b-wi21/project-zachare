@@ -18,6 +18,11 @@ health_expenditures_df_graph <- health_expenditures %>%
   distinct(Country.Name, .keep_all = T) %>%
   slice(1:152)
 
+health_expenditures_df_graph <- health_expenditures_df_graph %>%
+  group_by(
+    groups = cut(year_2018, breaks = c(500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 10000), 
+                labels = c("0-500", "500-1000", "1000-1500", "1500-2000", "2000-2500", "2500-3000", "3000-3500", "3500-4000", "4000-4500", "4500-5000", "5000-5500", "10000-10500")))
+
 health_expenditures_df_graph <- health_expenditures_df_graph %>% 
   replace_with_na_all(condition = ~.x == "..") 
 
