@@ -58,12 +58,12 @@ health_expenditure_avg <- health_expenditures_df %>%
   left_join(., overweight_average, by = "ISO.code") %>%
   na.omit()
 
-ggplot(health_expenditure_avg, aes(x=avg_expenditures, y=avg_overweight, size=u5_pop)) +
-  geom_point(alpha=0.5) +
+overweight_expenditure_plot <- ggplot(health_expenditure_avg, aes(x=avg_expenditures, y=avg_overweight, size=u5_pop)) +
+  geom_point(alpha=0.5, color= "darkblue", fill = NA) +
   xlim(0, 2500) +
   scale_size(range = c(.1, 24), name="Population Under 5 (by thousands)") +
   labs(title = "Correlation Between Average Health Expenditures and Overweight Rates By Country", x = "Average Health Expenditures per Capita (in USD)", y = "Average Percentage of Overweightness (2011-2018)")
          
-
-
-       
+overweight_cor_test <- cor.test(health_expenditure_avg$avg_expenditures, health_expenditure_avg$avg_overweight, 
+                method = "pearson")
+overweight_p_val <- res$p.value  
