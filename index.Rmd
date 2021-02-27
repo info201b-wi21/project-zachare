@@ -23,3 +23,25 @@ The malnourishment dataset has a fairly simple and straightforward structure. It
 3. Underweightness: below -2 standard deviations from the median weight-for-age. 
 
 The health expenditures dataset, just like the malnourishment dataset, breaks down each set of statistics by country. The statistics associated with each country are broken down by year in separate columns, and describe the spending on health in a country during a particular year, in the unit current US dollars. The columns in the sample, year 2017 and year 2018, indicate the years 2017 and 2018, respectively, and contain the health expenditures of a country in that year. 
+
+## Section 2.2
+
+
+```{r, echo = FALSE}
+knitr::kable(overweight_density, format = "html")
+```
+This shows the global averages of various malnourishment effects.
+
+```{r, echo = FALSE}
+knitr::kable(mal_effects_bar, format = "html")
+```
+
+```{r, echo = FALSE}
+knitr::kable(stunting_bubble, format = "html")
+```
+
+```{r, echo = FALSE}
+kable(knit_mal_df)
+```
+
+Bangladesh displays outliers in both stunting in the underweight category. It also has one of the largest under 5 populations in this dataset. South Sudan is also an outlier for the severe wasting and wasting categories. These could obviously skew the data in the respective categories but especially in the case of Bangladesh when weighting the population as it has one of the highest. The greatest outliers are within the population. The max is `r max_u5_pop` and the mean is `r mean_u5_pop` There is a portion of the data where the population is above 80,000 (by thousands) and then there is a large break down to below 30,000. In some evaluations this can alter the effects towards countries with larger populations and make false correlations that may be due to factors only present in those countries.
