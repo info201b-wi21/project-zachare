@@ -1,43 +1,65 @@
 
-# Section 3
-### Data science question 1: 
-What is the distribution of country counts across the range of income classifications? 
+## Section 3: Specific Question Analyses
+
+### Are there correlations between health expenditures and each of the manourishment categories?
+
+The four malnourishment categories referred to in this question are:<p>
+1. Stunting - % of children aged 0-59 months who are at least two standard deviations below the median height-for-age.<br>
+2. Overweight - % of children 0-59 months who are at least two standard deviations above the median weight-for-height.<br>
+3. Underweight - % of children 0-59 months who are at least two standard deviations below the median weight-for-age.<br>
+4. Wasting - % of children aged 0-59 months who are at least two standard deviations below the median weight-for-height.<br>
+
+**Data analysis method:**
+<p>First, the average health expenditure for each country across the years of 2011 to 2018 was calculated. This data frame was joined with one that contained the average rate for each of the malnourishment categories (wasting, overweight, underweight, and stunting) for the same years. This new data frame was then pivoted and the data was plotted on a scatterplot along with median regression curves. Median regression was chosen to avoid the impact of outliers.
+
+
+```{r correlation_plot_table, echo = FALSE, warning = FALSE}
+kable(correlation_plot_df[1:8, 1:4 ],
+       col.names = c("Country", "Malnourishment Category", "Rate in %", "Average Health Expenditure in USD (per capita)"))
+ ```
+
+
+```{r correlation_plot, echo = FALSE, warning = FALSE, message=FALSE}
+plot(correlation_plot)
+```
+
+<p>The data reveals a correlation between health expenditure and each of the 4 malnourishment categories. Ideally, we should have used mean or median income as the independent variable, but using health expenditures is also meaningful as it is intuitively a good proxy for the wealth of the nation and can also be used in further analyses. The rates of stunting, underweight, and wasting all show a strong inverse correlation with health expenditure, where the lowest health expenditures are associated with the highest rates in these three categories. An interesting thing to note is that the rate of 'overweight' does not necessarily follow the same trend as the other three malnourishment categories. The rate for this category increases as health expenditure increases and later plateaus/declines slightly. It can be assumed that countries with low health expenditures aren't able to spend much on food, and slightly wealthier countries can spend a little more. However, since unhealthy food is cheaper than healthy food, they end up eating more unhealthy food which contributes to their 'overweight' rate. Also, for some people in wealthy countries, easy access to food means overeating.  
+
+### What is the distribution of country counts across the range of income classifications? 
 
 This question is examining the distribution of countries across the income classifications, which range from 0-3. This question seeks to determine which income classification has the highest number of countries, and which income classification has the lowest. 
 
-My data analysis method starts with wrangling the data to only include each country as one observation (in the original dataframe, most countries are listed multiple times due to several different observation years). Because income classification remains the same across all these years for each country, I was able to simply remove duplicates of country names so that each country was only included as one observation. Next, I made the bar plot of counts using ggplot by including the built-in “stat” argument to have the height of the bar represent the count of cases within each income classification. 
+**Data analysis method:**
+<p>First, the data was wrangled to include each country as only one observation (in the original dataframe, most countries are listed multiple times due to several different observation years). Because income classification remains the same across all these years for each country, duplicates of country names could be removed so that each country was only included as one observation. Next, the bar plot was made by including the built-in “stat” argument to have the height of the bar represent the count of cases within each income classification.
 
-```{r part_2, echo=FALSE}
+```{r income_classification_graph, echo=FALSE, warning=FALSE}
 plot(income_classification_graph)
 ```
 
-Evaluation: 
-The bar graph reveals that income classification “2” has the highest country count, around approximately 55, and income classification “3” has the lowest country count, at just above 20. It appears that the majority of countries lie in the middle of the distribution of income classifications, across classification “1” and “2”. 
+<p>The bar graph reveals that income classification “2” has the highest country count, around approximately 55, and income classification “3” has the lowest country count, at just above 20. It appears that the majority of countries lie in the middle of the distribution of income classifications, across classification “1” and “2”.
 
-### Data science question 2: 
-What is the distribution of countries across the range of health expenditures? Does this distribution map onto the distribution of income classifications? 
+### What is the distribution of countries across the range of health expenditures? Does this distribution map onto the distribution of income classifications? 
 
-This question is examining the distribution of countries across the range of health expenditures, which have a large range from the 100s to over 10,000. This question further seeks to examine whether this distribution correlates to the distribution of income classifications. 
+<p>This question is examining the distribution of countries across the range of health expenditures, which have a large range from the 100s to over 10,000. This question further seeks to examine whether this distribution correlates to the distribution of income classifications. 
 
-My data analysis method starts with some simple data wrangling in order to remove duplicate observations of the same country and filter for the most recent year with data, which is 2018. I also had to change all the health expenditure values into continuous variables, because they were originally inputted as characters instead of numbers. Because every country had different health expenditures, I had to use vector binning to generalize the health expenditure values into smaller ranges. I chose to cut them into groups of 500, and created my bar graph off of these groups. 
+**Data analysis method:**
+<p>The first step was to remove duplicate observations of the same country and filter for the most recent year with data, which is 2018. Additionally, all of the health expenditure values had to be changed into continuous variables because they were originally inputted as characters instead of integers or doubles. Because every country had different health expenditures, vector binning was used to generalize the health expenditure values into smaller ranges. A log scale was used for the bucket sizes. 
 
-```{r part_2, echo=FALSE}
+```{r health_expenditures_graph, echo=FALSE, warning=FALSE}
 plot(health_expenditures_graph)
 ```
 
-Evaluation: 
-The bar graph reveals that the distribution of health expenditures is skewed right, meaning the majority of values lie in lower health expenditure values. It appears that most countries have a health expenditure of 0-500. This does not map onto the distribution of income classifications, as the distribution of income classifications was close to symmetrical, most of the values being in the middle two income classifications. This is rather surprising because you would expect that income classification would be positively correlated with health expenditure, meaning the higher a country’s income classification, the higher their health expenditure. However, because these two bar graphs do not show the same distribution, it indicates that there is not a correlation between these features. 
+<p>The bar graph reveals that the distribution of health expenditures is skewed right, meaning the majority of values lie in lower health expenditure values. It appears that most countries have a health expenditure of 200-500. This somewhat resembles the distribution of income classifications as both bar charts are relatively symmetrical. This shows that there is a loose correlation between income classification and health expenditure, but it may not be statistically significant. Furthermore, the data for this plot could look very different with different bucket sizes, so a more in depth analysis would have to be done to determine a true relationship between these features. 
 
-### Data science question 3: 
-Is there a correlation between countries' health expenditures and their average rate of overweightness for their population under 5?
+### Is there a correlation between countries' health expenditures and their average rate of overweightness for their population under 5?
 
 This question is examining if there is any correlation between money spent on health and rates of overweightness in individuals under 5. Overweightness can be caused by both under and overnourishment.
 
-I first took the dataset for malnourishment and omitted any NA values. Then I selected the only columns of interest (using the ISO.code to record the country). Next, I grouped by that ISO.code and found the mean of the overweight percentage and populations under 5 between the years 2011 and 2018. I, then, wrangled the health expenditure data to group by country, average the expenditures per country and join that data with my the malnourishment data. 
+**Data analysis method:**
+<p>The first step was to get rid of all of the NA values in the malnourishment data frame. Then, the only columns of interest are selected. Next, the data was grouped by ISO.code and the overweight percentage and populations under 5 were averaged (using only vales between the years of 2011 and 2018). The data was then joined with the health expenditure data by ISO.code and plotted.
 
-```{r part_2, echo=FALSE}
+```{r overweight_expenditure_plot, echo=FALSE, warning=FALSE}
 plot(overweight_expenditure_plot)
 ```
 
-Evaluation:
-After evaluation, it was determined there is a correlation between average overweightness and average health expenditures. It was determined this quantitatively by running a correlation test on th data and checking the p-value. The p-value was 0.8755 which is very high and highly suggests there is a correlation in the data. This means there is an 88% chance that this would get data at least this extreme if the null hypothesis is true. It was also found this graphically by plotting the data in a scatter bubble plot and also showing a regression line. The reason this specific test was performed to maybe show an opposite correlation with what we have been previously seeing with other effects of malnourishment (lower expenditures results in more people effected). It was figured overweightness may be more prevalent in richer countries due to surplus of food and supply. It shows that there is a high positive correlation between these two variables meaning higher expenditures does result in higher rates of overweightness.
+<p>After evaluation, I've determined there is a correlation between average overweightness and average health expenditures. I determined this quantitatively by running a correlation test on my data and checking the p-value. The p-value was 0.8755 which is very high and highly suggests there is a strong correlation in the data. This means there is an 88% chance that I would get data at least this extreme if the null hypothesis is true. I also found this graphically by plotting the data in a scatter bubble plot and also showing a regression line. The reason I performed this specific test was to maybe show an opposite correlation with what we have been previously seeing with other effects of malnourishment (lower expenditures results in more people effected). I figured overweightness may be more prevalent in richer countries due to surplus of food and supply. It shows that there is a high positive correlation between these two variables meaning higher expenditures does result in higher rates of overweightness.
