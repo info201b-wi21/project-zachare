@@ -203,9 +203,11 @@ overweight_density <- malnourishment_average_df %>%
   geom_density(fill="#69b3a2", color = "#0000FF", alpha = 0.8) + 
   labs(x = "Overweight rate in %", y = "Density", title = "Overweight Rate Distribution Density Plot")
 
-# mal_effects_pie <- ggplot(mal_df, aes(x = "", y = avg_mal_effects, fill = mal_effects_names)) +
-#   geom_bar(stat="identity", width=1, color="white") +
-#   coord_polar("y", start=0) + theme_void() + labs(title = "Effects of Malnutrition", fill = "Effects")
+mal_effects_bar <- ggplot(mal_df, aes(x=(mal_effects_names), y = (avg_mal_effects), fill = as.factor(mal_effects_names)) ) + 
+  geom_bar(stat = "identity" ) +
+  scale_fill_brewer(palette = "Set1") +
+  theme(legend.position="none") +
+  labs(title = "Global Rates of Malnourishment Effects", x = "Malnourishment Effects", y = "Percentage Effected")
 
 stunting_bubble <- ggplot(malnourishment_average_df, aes(x=Income.Classification, y = Stunting, size = U5.Population...000s.)) +
   geom_point(alpha=0.7, color = "darkgreen") + 
