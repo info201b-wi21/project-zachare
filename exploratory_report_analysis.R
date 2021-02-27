@@ -33,9 +33,9 @@ health_expenditures_df_graph <- health_expenditures_df_graph %>%
 
 health_expenditures_graph <- ggplot(data = as_tibble(group_tags), 
                                     mapping = aes(x = value)) +
-  geom_bar(fill = "red", color = "white",alpha = 0.7) +
+  geom_bar(fill = "red", color = "white", alpha = 0.7) +
   labs(title = "Distribution of Health Expenditures",
        x = "Health Expenditure",
        y = "Number of Countries") +
-  theme(text = element_text(size = 7))
+  theme(text = element_text(size = 6))
        
