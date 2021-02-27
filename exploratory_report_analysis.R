@@ -10,15 +10,9 @@ income_classification_graph <- ggplot(malnourishment_df_graph, aes(x = factor(In
   labs(title = "Number of Countries in each Income Classification",
        x = "Income Classification",
        y = "Number of Countries") 
-  
-malnourishment_df <- malnourishment_df %>%
-  rename(Country.Code = ISO.code) 
 
 health_expenditures_df_graph <- health_expenditures %>%
-  left_join(malnourishment_df, by = c("Country.Code")) %>%
-  arrange(Income.Classification) %>%
-  distinct(Country.Name, .keep_all = T) %>%
-  slice(1:152)
+  distinct(Country.Name, .keep_all = T) 
 
 health_expenditures_df_graph$year_2018 <- as.numeric(as.character(health_expenditures_df_graph$year_2018, na.rm = T))
 
