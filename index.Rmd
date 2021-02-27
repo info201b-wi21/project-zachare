@@ -27,3 +27,17 @@ plot(health_expenditures_graph)
 
 Evaluation: 
 The bar graph reveals that the distribution of health expenditures is skewed right, meaning the majority of values lie in lower health expenditure values. It appears that most countries have a health expenditure of 0-500. This does not map onto the distribution of income classifications, as the distribution of income classifications was close to symmetrical, most of the values being in the middle two income classifications. This is rather surprising because you would expect that income classification would be positively correlated with health expenditure, meaning the higher a country’s income classification, the higher their health expenditure. However, because these two bar graphs do not show the same distribution, it indicates that there is not a correlation between these features. 
+
+### Data science question 3: 
+Is there a correlation between countries' health expenditures and their average rate of overweightness for their population under 5?
+
+This question is examining if there is any correlation between money spent on health and rates of overweightness in individuals under 5. Overweightness can be caused by both under and overnourishment.
+
+I first took the dataset for malnourishment and omitted any NA values. Then I selected the only columns of interest (using the ISO.code to record the country). Next, I grouped by that ISO.code and found the mean of the overweight percentage and populations under 5 between the years 2011 and 2018. I, then, wrangled the health expenditure data to group by country, average the expenditures per country and join that data with my the malnourishment data. 
+
+```{r part_2, echo=FALSE}
+plot(overweight_expenditure_plot)
+```
+
+Evaluation:
+After evaluation, I've determined there is no correlation between average overweightness and average health expenditures. I determined this quantitatively by running a correlation test on my data and checking the p-value. The p-value was 0.8755 which is very high and highly suggests there is no correlation in the data. This means there is an 88% chance that I would get data at least this extreme if the null hypothesis is true. I also found this graphically by plotting the data in a scatter bubble plot and also showing a regression line. The reason I performed this specific test was to maybe show an opposite correlation with what we have been previously seeing with other effects of malnourishment (lower expenditures results in more people effected). I figured overweightness may be more prevalent in richer countries due to surplus of food and supply. 
