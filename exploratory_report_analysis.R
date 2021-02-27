@@ -192,6 +192,9 @@ mal_effects_names <- c("Overweight", "Stunting", "Underweight", "Wasting")
 
 mal_df <- data.frame(mal_effects_names, avg_mal_effects)
 
+knit_mal_df <- mal_df %>%
+  rename("Effects" = mal_effects_names, "Average Percentage" = avg_mal_effects)
+
 malnourishment_data_desc <- list(income_class_mean, mean_u5_pop, max_u5_pop, 
                                  mean_overweight, max_overweight, 
                                  mean_stunting, max_stunting,
