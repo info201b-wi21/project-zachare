@@ -1,3 +1,4 @@
+
 # Section 3
 ### Data science question 1: 
 What is the distribution of country counts across the range of income classifications? 
@@ -16,13 +17,13 @@ The bar graph reveals that income classification “2” has the highest country
 ### Data science question 2: 
 What is the distribution of countries across the range of health expenditures? Does this distribution map onto the distribution of income classifications? 
 
-This question is examining the distribution of countries across the range of health expenditures, which range from 102 to 994. This question further seeks to examine whether this distribution correlates to the distribution of income classifications. 
+This question is examining the distribution of countries across the range of health expenditures, which have a large range from the 100s to over 10,000. This question further seeks to examine whether this distribution correlates to the distribution of income classifications. 
 
-My data analysis method starts with wrangling the data to join our two datasets together in order to evaluate both the income classification and the health expenditures in the same dataset. I used the health expenditure data from 2018 because that was the most recent year with data. I arranged the dataset by income classification so that it follows the same order as the income classification graph, and made the bar graph using the stat function again, very similarly to the income classification graph. 
+My data analysis method starts with some simple data wrangling in order to remove duplicate observations of the same country and filter for the most recent year with data, which is 2018. I also had to change all the health expenditure values into continuous variables, because they were originally inputted as characters instead of numbers. Because every country had different health expenditures, I had to use vector binning to generalize the health expenditure values into smaller ranges. I chose to cut them into groups of 500, and created my bar graph off of these groups. 
 
 ```{r part_2, echo=FALSE}
 plot(health_expenditures_graph)
 ```
 
 Evaluation: 
-The bar graph reveals that the distribution of health expenditures varies a good amount. It looks like the health expenditure amount with the highest frequency of countries is 994, which also happens to be the highest health expenditure amount. This is fairly surprising when compared to the income classification distribution, since income classification 3 has the lowest frequency of countries. You would expect that primarily the countries in income classification 3 would have higher health expenditures, so the distributions would look similar. However, this distribution of health expenditures does not seem to have a distinct pattern that correlates with the income classification distribution, and looks pretty evenly dispersed. This indicates that there is not a correlation between income classification and health expenditures. 
+The bar graph reveals that the distribution of health expenditures is skewed right, meaning the majority of values lie in lower health expenditure values. It appears that most countries have a health expenditure of 0-500. This does not map onto the distribution of income classifications, as the distribution of income classifications was close to symmetrical, most of the values being in the middle two income classifications. This is rather surprising because you would expect that income classification would be positively correlated with health expenditure, meaning the higher a country’s income classification, the higher their health expenditure. However, because these two bar graphs do not show the same distribution, it indicates that there is not a correlation between these features. 
