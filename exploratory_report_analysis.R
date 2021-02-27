@@ -18,18 +18,28 @@ health_expenditures_df_graph <- health_expenditures %>%
   distinct(Country.Name, .keep_all = T) %>%
   slice(1:152)
 
-health_expenditures_df_graph <- health_expenditures_df_graph %>%
-  group_by(
-    groups = cut(year_2018, breaks = c(500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 10000), 
-                labels = c("0-500", "500-1000", "1000-1500", "1500-2000", "2000-2500", "2500-3000", "3000-3500", "3500-4000", "4000-4500", "4500-5000", "5000-5500", "10000-10500")))
+health_expenditures_df_graph$year_2018 <- as.numeric(as.character(health_expenditures_df_graph$year_2018, na.rm = T))
+
+breaks <- c(0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 10000)
+
+tags <- c("0-500", "500-1000", "1000-1500", "1500-2000", "2000-2500", "2500-3000", "3000-3500", "3500-4000", "4000-4500", "4500-5000", "5000-5500", "10000-10500")
+
+group_tags <- cut(health_expenditures_df_graph$year_2018, na.rm = T,
+                  breaks = breaks, 
+                  include.lowest = TRUE, 
+                  right = FALSE, 
+                  labels = tags)
+
+summary(group_tags)
 
 health_expenditures_df_graph <- health_expenditures_df_graph %>% 
   replace_with_na_all(condition = ~.x == "..") 
 
-health_expenditures_graph <- ggplot(health_expenditures_df_graph, aes(x = factor(year_2018))) +
-  geom_bar(stat = "count", fill = "red") +
+health_expenditures_graph <- ggplot(data = as_tibble(group_tags), 
+                                    mapping = aes(x = value)) +
+  geom_bar(fill = "red", color = "white",alpha = 0.7) +
   labs(title = "Distribution of Health Expenditures",
        x = "Health Expenditure",
        y = "Number of Countries") +
-  theme(axis.text.x=element_blank(),
-        axis.ticks.x=element_blank())
+  theme(text = element_text(size = 7))
+       
