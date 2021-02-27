@@ -38,4 +38,32 @@ health_expenditures_graph <- ggplot(data = as_tibble(group_tags),
        x = "Health Expenditure",
        y = "Number of Countries") +
   theme(text = element_text(size = 6))
+
+# Section 3: Zach
+
+overweight_average <- malnourishment_df %>%
+  na.omit() %>%
+  select(ISO.code, Overweight, U5.Population...000s.) %>%
+  group_by(ISO.code) %>%
+  summarize(avg_overweight = mean(Overweight), u5_pop = mean(U5.Population...000s.))
+
+
+health_expenditure_avg <- health_expenditures_df %>%
+  replace(is.na(.), 0) %>%
+  group_by(Country.Code) %>%
+  mutate(avg_expenditures = mean(amount_2011:amount_2018), na.rm = TRUE) %>%
+  select(Country.Code, avg_expenditures) %>%
+  filter(avg_expenditures > 0) %>%
+  dplyr::rename("ISO.code" = "Country.Code") %>%
+  left_join(., overweight_average, by = "ISO.code") %>%
+  na.omit()
+
+ggplot(health_expenditure_avg, aes(x=avg_expenditures, y=avg_overweight, size=u5_pop)) +
+  geom_point(alpha=0.5) +
+  xlim(0, 2500) +
+  scale_size(range = c(.1, 24), name="Population Under 5 (by thousands)") +
+  labs(title = "Correlation Between Average Health Expenditures and Overweight Rates By Country", x = "Average Health Expenditures per Capita (in USD)", y = "Average Percentage of Overweightness (2011-2018)")
+         
+
+
        
