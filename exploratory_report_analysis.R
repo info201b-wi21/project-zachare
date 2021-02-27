@@ -15,7 +15,8 @@ malnourishment_df <- malnourishment_df %>%
 health_expenditures_df_graph <- health_expenditures %>%
   left_join(malnourishment_df, by = c("Country.Code")) %>%
   arrange(Income.Classification) %>%
-  slice(1:924)
+  distinct(Country.Name, .keep_all = T) %>%
+  slice(1:152)
 
 health_expenditures_df_graph <- health_expenditures_df_graph %>% 
   replace_with_na_all(condition = ~.x == "..") 
