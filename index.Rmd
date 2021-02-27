@@ -49,3 +49,32 @@ kable(knit_mal_df)
 This shows the global averages of various malnourishment effects.
 
 Bangladesh displays outliers in both stunting in the underweight category. It also has one of the largest under 5 populations in this dataset. South Sudan is also an outlier for the severe wasting and wasting categories. These could obviously skew the data in the respective categories but especially in the case of Bangladesh when weighting the population as it has one of the highest. The greatest outliers are within the population. The max is `r max_u5_pop` and the mean is `r mean_u5_pop` There is a portion of the data where the population is above 80,000 (by thousands) and then there is a large break down to below 30,000. In some evaluations this can alter the effects towards countries with larger populations and make false correlations that may be due to factors only present in those countries.
+
+
+### Section 2.2: Summary analysis - Health Expenditure Data
+
+```{r summary_statistics, echo = FALSE, warning = FALSE}
+kable(summary_statistics_df,
+      col.names = c("", "mean", "max", "min"))
+```
+
+
+<p>The first row is the mean health expenditure per capita for all the countries in the world for the years of 2000, 2011, and 2018. The bottom two rows display the minimum and maximum health expenditures per capita of any country for these years.  
+
+```{r expenditure_rate_change_plot, echo = FALSE, warning = FALSE}
+plot(expenditure_rate_change_plot)
+```
+
+<p>According to this choropleth map, the majority of countries around the world saw a 0% to 700% increase in their health expenditures between the years of 2000 and 2018. The outliers in this data are Venezuela, the Democratic Republic of Congo, China, Myanmar, and Ecuador. The health expenditures of Venezuela and the Democratic Republic of Congo fell 27.65% and 0.59%, respectively. This is likely due to political turmoil, which weakened their health infrastructures. The health expenditures of China, Myanmar, and Ecuador rose 1,089.81%, 1,265.65%, and 977.94%, respectively. The most important factors that contributed to this are likely improving health and living standards. Since the data displays each country's statistics individually, outliers do not impact the results. 
+
+```{r top_10_expenditures_plot, echo = FALSE, warning = FALSE}
+plot(top_10_expenditures_plot)
+```
+
+<p>The bar graph reveals that the United States had the largest health expenditure per capita in 2018, followed by Switzerland and Norway. Since the data displays each country's statistics individually, outliers do not impact the result. 
+
+```{r country_trend_plot, echo = FALSE, warning = FALSE}
+plot(country_trend_plot)
+```
+
+<p>The line graph exposes the United States as being an outlier in regard to health expenditure trends between 2011 and 2018. While most of the countries' health expenditures on the graph fluctuated between 0 and 6,000 USD per capita, the United States saw a constant increase of health expenditure throughout these years (from 8130.76 USD to 10,623.85 USD). The magnitude and range of the increase of the health expenditure of the United States increases the average expenditure of the world, which is important to take into account in a world-level analysis. 
