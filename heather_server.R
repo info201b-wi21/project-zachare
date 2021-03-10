@@ -29,3 +29,39 @@ country_trends_df <- all_health_expenditures_df %>%
 
 start_year = 2011
 end_year = 2018
+
+my_server <- function(input, output){
+  
+  output$summary_analysis_health_expenditures_graph <- renderPlot({
+    
+    country_trends_df <- country_trends_df[country_trends_df$Country.Name == input$Country.Name, ]
+    
+    country_trends_df <- country_trends_df %>%
+      filter(year >= input$year[1], year <= input$year[2])
+    
+    summary_analysis_health_expenditures_graph <- ggplot(data = country_trends_df %>%
+                         filter(Country.Name %in% countries) %>%
+                         mutate(Country.Name = factor(Country.Name, levels = countries)),
+                       aes(x = year, y = amount, group = Country.Name)) +
+      geom_line(aes(color = Country.Name)) +
+      geom_point(aes(color = Country.Name)) +
+      scale_colour_brewer(labels = countries, palette = "Paired") +
+      labs(title=sprintf("Health Expenditure in USD (per capita)"),
+           x ="Year", y = "Health Expenditure in USD (per capita)", color = "Country") +
+      scale_x_continuous(limits = c(start_year, end_year)) +
+      scale_y_continuous(label = comma)
+    
+    summary_analysis_health_expenditures_graph
+  })
+  
+  output$my_message <- renderText({
+    
+    place <- paste(" ", input$Country.Name)
+    
+    year_range <- paste(min(input$year), " to ", max(input$year))
+    
+    my_message <- paste("This graph is showing the health expenditures from ", year_range, " in", place, ".")
+    
+    my_message
+  })
+}
