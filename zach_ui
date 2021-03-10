@@ -1,0 +1,33 @@
+
+ui <- fluidPage(
+  
+  titlePanel("CO2 Emissions By Type"),
+  
+  sidebarLayout(
+    
+    sidebarPanel(
+
+      
+      sliderInput(
+        inputId = "expenditures",
+        label = "Costs in Expenditures", min = 0, max = 10000, value = c(0, 10000),
+      ),
+      
+      br(),
+      
+      sliderInput(inputId = "income_button", 
+                  label = "Income Classification", min = 0, max = 3, value = c(0,3))
+    ),
+    
+    mainPanel(
+      tabsetPanel(type = "tabs",
+                  tabPanel("Overweight", plotOutput("overweight_plot"))
+      )
+    )
+  )
+  
+  
+  
+  
+  
+)
