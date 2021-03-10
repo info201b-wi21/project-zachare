@@ -7,10 +7,15 @@ year_regex <- "^(amount)_([0-9]{4})$"
 all_health_expenditures_df <- all_health_expenditures_df %>% mutate(across(matches(year_regex), as.numeric))
 
 source("expenditures_and_malnourishment.R")
+source("health_expenditure_line_plot.R")
 
 server <- function(input,output) {
   output$correlation_plot <- renderPlot({
     make_expenditure_plot(input)
+  })
+  
+  output$country_trend_plot <- renderPlot({
+    make_trend_plot(input)
   })
 }
 
