@@ -1,7 +1,7 @@
 
 ui <- fluidPage(
   
-  titlePanel("CO2 Emissions By Type"),
+  titlePanel("Health Expenditures and Malnourishment"),
   
   sidebarLayout(
     
