@@ -1,4 +1,14 @@
-health_expenditures_df <- all_health_expenditures_df %>% slice(1:217)
+health_expenditures_group_df <- all_health_expenditures_df %>% 
+  slice(1:217) %>%
+  pivot_longer(cols = matches(year_regex), 
+               names_pattern = year_regex,
+               names_to = c(".value", "year")) %>% 
+  select(Country.Name, Country.Code, year, amount) %>%
+  group_by(Country.Code, Country.Name)
+
+malnourishment_group_df <- malnourishment_df %>%
+  rename(Country.Code = ISO.code) %>%
+  group_by(Country.Code)
 
 
 make_expenditure_plot <- function(input) {
@@ -8,20 +18,12 @@ make_expenditure_plot <- function(input) {
   colors <- list("mediumvioletred", "midnightblue", "mediumturquoise", "slateblue1")
   names(colors) <- categories
   
-  health_expenditures_average_rate_df <- health_expenditures_df %>%
-    pivot_longer(cols = matches(year_regex), 
-                 names_pattern = year_regex,
-                 names_to = c(".value", "year")) %>% 
-    select(Country.Name, Country.Code, year, amount) %>%
-    mutate(year = as.numeric(year)) %>%
+  health_expenditures_average_rate_df <- health_expenditures_group_df %>%
     filter(year %in% (start_year:end_year)) %>%
-    group_by(Country.Code, Country.Name) %>%
     summarize(average_health_expenditure = mean(amount, na.rm = TRUE), .groups="drop")
   
-  malnourishment_average_df <- malnourishment_df %>%
-    rename(Country.Code = ISO.code) %>%
+  malnourishment_average_df <- malnourishment_group_df %>%
     filter(Year %in% (start_year:end_year)) %>%
-    group_by(Country.Code) %>%
     summarize(Wasting = mean(Wasting, na.rm = TRUE),
               Overweight = mean(Overweight, na.rm = TRUE),
               Underweight = mean(Underweight, na.rm = TRUE),
@@ -57,3 +59,4 @@ make_expenditure_plot <- function(input) {
   
     return(correlation_plot)
 }
+
