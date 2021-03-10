@@ -8,9 +8,10 @@ all_health_expenditures_df <- all_health_expenditures_df %>% mutate(across(match
 
 source("expenditures_and_malnourishment.R")
 
-server <- function(input, output) {
+server <- function(input,output) {
   output$correlation_plot <- renderPlot({
-    expenditures_and_malnourishment(input)
+    make_expenditure_plot(input)
   })
 }
+
 
