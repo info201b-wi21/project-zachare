@@ -1,4 +1,4 @@
-  title = "Health Expenditures over Time",
+title = "Health Expenditures over Time",
   sidebarLayout(
     sidebarPanel(
       sliderInput(
@@ -10,7 +10,8 @@
       selectInput(
         inputId = "Country.Name",
         label = "Country",
-        c(unique(as.character(country_trend_df$Country.Name)))),
+        c("World", "Russian Federation", "United Kingdom", "Germany", "France", 
+          "Japan", "Israel", "United States", "China", "India"))),
       textOutput(
         outputId = "my_message"
       )
