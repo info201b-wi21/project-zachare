@@ -31,8 +31,12 @@ make_regression_line_plot <- function(input) {
     mutate(category = factor(category, levels=selected_categories)) %>%
     na.omit()
   
+  regression_cor_test <- cor.test(correlation_plot_df$average_health_expenditure, correlation_plot_df$rate, method = "pearson")
+  regression_p_val <- round(regression_cor_test$p.value, digits = 6)
+  
   title <- "Correlation of Countries' Health Expenditures and Under 5 y/o Malnourishment Rates"
-  subtitle <- "Hover over the dots for more info."
+  subtitle <- paste0("Hover over the dots for more info. \nThe correlation statistic (p-value) of the current data is ", regression_p_val,
+                     ".\nLess than 0.05 suggests statistical significance and represents less than 5% chance that the data is random.")
   
   correlation_regression_line_plot <- 
     ggplot(correlation_plot_df,
@@ -54,7 +58,7 @@ make_regression_line_plot <- function(input) {
     scale_y_continuous(limits = c(0.0, 60.0))
   
     return(ggplotly(correlation_regression_line_plot, tooltip="text") %>%
-          layout(margin=list(t = 75), 
+          layout(margin=list(t = 150), 
                 title = list(text = paste0(title, '<br>', '<sub><i>', subtitle, '</i></sub>')),
                 legend = list(y = 0.5, title=list(text = 'Malnourishment<br>Category<br>'))))
 }
