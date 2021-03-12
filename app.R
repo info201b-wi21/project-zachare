@@ -1,0 +1,15 @@
+library('knitr')
+library('ggplot2')
+library('scales')
+library('maps')
+library('RColorBrewer')
+library('countrycode', exclude = "select")
+library('dplyr')
+library('tidyverse')
+library('naniar')
+library('plotly')
+
+source("my_server.R")
+source("my_ui.R")
+
+shinyApp(ui = ui, server = server)
