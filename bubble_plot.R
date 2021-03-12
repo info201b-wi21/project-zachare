@@ -22,6 +22,7 @@ make_bubble_plot <- function(input) {
     left_join(overweight_average_df, by = c("Country.Code")) %>%
     select(Country.Name, continent, Overweight, average_health_expenditure, U5.Population) %>%
     filter(continent %in% selected_continents) %>%
+    filter(average_health_expenditure >= input$bubble_expenditure[1], average_health_expenditure <= input$bubble_expenditure[2]) %>%
     mutate(continent = factor(continent, levels=selected_continents), 
            tooltip_text = paste("Country: ", Country.Name, "\nUnder 5 y/o Population: ", 
                                 format(round(U5.Population), 
@@ -31,8 +32,14 @@ make_bubble_plot <- function(input) {
   lower_expenditure <- max(input$bubble_expenditure[1], min(overweight_expenditure_df %>% pull(average_health_expenditure)))
   higher_expenditure <- min(input$bubble_expenditure[2], max(overweight_expenditure_df %>% pull(average_health_expenditure)))
   
+  overweight_cor_test <- cor.test(overweight_expenditure_df$average_health_expenditure, overweight_expenditure_df$Overweight, method = "pearson")
+  overweight_p_val <- round(overweight_cor_test$p.value, digits = 6)
+  
+  
   title <- sprintf("Average Health Expenditures and Under 5 y/o Overweight Rates By Country (%d-%d)", start_year, end_year)
-  subtitle <- "Bubble sizes reflect the Under 5 y/o population sizes. Hover over the bubbles for country info."
+  message <- "You are viewing averaged data between the years 2011 and 2018. \nOnly countries with health expenditures between "
+  subtitle <- paste0(message, input$bubble_expenditure[[1]], " and ", input$bubble_expenditure[[2]], " U.S. Dollars are being displayed. \nThe correlation statistic (p-value) of the current data is ", overweight_p_val,
+                     ".\nLess than 0.05 suggests statistical significance and represents less than 5% chance that the data is random.")
   overweight_bubble_plot <- ggplot(overweight_expenditure_df,
                                         aes(x=average_health_expenditure,
                                             y=Overweight,  color = continent, text = tooltip_text)) +
@@ -41,13 +48,15 @@ make_bubble_plot <- function(input) {
     scale_size(range = c(.1, 24), name = "") +
     labs(title = title,
          subtitle = subtitle,
+         tag = "hello",
          x = "Average Health Expenditures per Capita in USD (log scale)",
          y = "Average Percentage of Under 5 y/o Overweight") +
-    scale_x_continuous(labels = comma, limits = c(lower_expenditure, higher_expenditure), trans = "log10") + 
+    scale_x_continuous(labels = comma, trans = "log10") + 
     scale_y_continuous(labels = comma)
   
   return(ggplotly(overweight_bubble_plot, tooltip = "text") %>%
-           layout(margin=list(t = 75), 
+           layout(margin=list(t = 200),
                   title = list(text = paste0(title, '<br>', '<sub><i>', subtitle, '</i></sub>')),
-                  legend = list(itemsizing='constant', y = 0.5)))
+                  legend = list(itemsizing='constant', y = 0.5)
+                  ))
 }

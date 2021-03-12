@@ -40,5 +40,6 @@ server <- function(input,output) {
   output$overweight_bubble_plot <- renderPlotly({
     make_bubble_plot(input)
   })
+
 }
 
