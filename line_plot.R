@@ -17,12 +17,22 @@ make_line_plot <- function(input) {
   selected_countries <- c(input$line_countries)
   selected_colors <- unlist(colors[names(colors) %in% selected_countries])
   
+  new_df <- country_trends_df %>%
+    na.omit() %>%
+    filter(year >= start_year, year <= end_year) %>%
+    filter(Country.Name %in% selected_countries) %>%
+    mutate(mean = mean(amount))
+
+  
+  mean_df <- max(new_df$mean, na.rm = TRUE)
+    
+  
   country_line_plot <-
     ggplot(data=country_trends_df %>%
              filter(Country.Name %in% selected_countries) %>%
              mutate(Country.Name = factor(Country.Name, levels=selected_countries)),
            aes(x=year, y=amount, group=Country.Name, 
-               text = paste("Country:", Country.Name, 
+               text = paste("Country:", Country.Name,
                             "<br>Health Expenditure: $", round(amount, digit = 2)))) +
     geom_line(aes(color=Country.Name), size = 0.75) +
     geom_point(aes(color=Country.Name)) +
@@ -30,7 +40,7 @@ make_line_plot <- function(input) {
     labs(title=sprintf("Health Expenditure per capita in USD from %d to %d", start_year, end_year),
          x ="Year", y = "Health Expenditure per capita in USD", color = "Country") +
     scale_x_continuous(limits = c(start_year, end_year)) +
-    scale_y_continuous(label=comma)
+    scale_y_continuous(label=comma) 
   
   return(ggplotly(country_line_plot, tooltip = "text") %>%
            layout(legend = list(y = 0.5, title=list(text = 'Country<br>'))))
