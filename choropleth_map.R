@@ -10,7 +10,8 @@ malnourishment_average_df <- malnourishment_df %>%
   summarize(Wasting = mean(Wasting, na.rm = TRUE),
             Overweight = mean(Overweight, na.rm = TRUE),
             Underweight = mean(Underweight, na.rm = TRUE),
-            Stunting = mean(Stunting, na.rm = TRUE))
+            Stunting = mean(Stunting, na.rm = TRUE), 
+            U5.Population = mean(U5.Population...000s.))
 
 africa_malnourishment_rate_data <- africaData %>%
   inner_join(malnourishment_average_df, by="Country.Code")
@@ -29,6 +30,12 @@ blank_theme <- theme_bw() +
 
 make_choropleth_map <- function(input) {
   selected_category <- input$map_category
+  weighted_mean <- weighted.mean(africa_malnourishment_rate_data %>% pull(!!as.name(selected_category)), 
+                        africa_malnourishment_rate_data %>% pull(U5.Population))
+  title <- paste(selected_category, "Rate in Under 5 y/o Africa Population")
+  subtitle <- paste0("The aggregated ", tolower(selected_category), " rate is ", 
+                     round(weighted_mean, digits = 2), "%. Hover over the countries for more info.", collapse = "")
+  
   africa_choropleth_map <- ggplot(africa_malnourishment_rate_data) +
     geom_polygon(mapping = aes(x = long, y = lat, group = group, 
                                fill=!!as.name(selected_category), 
@@ -39,9 +46,13 @@ make_choropleth_map <- function(input) {
                  color = "grey", size = .05) + 
     coord_map(xlim=c(-20, 52), ylim=c(-36, 36)) +
     scale_fill_gradientn(colours = brewer.pal(9, name="RdPu")) +
-    labs(title= paste(selected_category, "Rate in Under 5 y/o Africa Population"), 
-         caption = "", fill = paste(selected_category, "%")) +
+    labs(title= title, subtitle=subtitle,  fill = paste(selected_category, "%")) +
     blank_theme
   
-  return(ggplotly(africa_choropleth_map, tooltip = "text"))
+  plot(africa_choropleth_map)
+  
+  return(ggplotly(africa_choropleth_map, tooltip = "text") %>%
+           layout(margin=list(t = 75),
+                  title = list(text = paste0(title, '<br>', '<sub><i>', subtitle, '</i></sub>')),
+                  legend = list(itemsizing='constant', y = 0.5)))
 }

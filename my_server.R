@@ -1,7 +1,7 @@
 malnourishment_df <- read.csv(
-  'https://raw.githubusercontent.com/info201b-wi21/project-zachare/main/malnutrition-estimates%20(1).csv?token=ASLWDXAQUFCKJYCV6R5QMBDAJUQ7Y')
+  'https://raw.githubusercontent.com/info201b-wi21/project-zachare/main/malnutrition-estimates%20(1).csv?token=ASLWDXHAZARKZCEBOUL3ENTAKTZEY')
 all_health_expenditures_df <- read.csv(
-  'https://raw.githubusercontent.com/info201b-wi21/project-zachare/main/data/Health%20Expenditures/ae2e0043-4b54-4d83-af00-191617f8402b_Data.csv?token=ASLWDXHHC5OK6PNVNUEKEF3AJURCU')
+  'https://raw.githubusercontent.com/info201b-wi21/project-zachare/main/data/Health%20Expenditures/ae2e0043-4b54-4d83-af00-191617f8402b_Data.csv?token=ASLWDXH3ZEYZ6TTW6YR5OA3AKTZHA')
 names(all_health_expenditures_df) <- gsub("^X[0-9]{4}..YR([0-9]{4})\\.$","amount_\\1", names(all_health_expenditures_df))
 year_regex <- "^(amount)_([0-9]{4})$"
 all_health_expenditures_df <- all_health_expenditures_df %>% mutate(across(matches(year_regex), as.numeric))
@@ -37,9 +37,8 @@ server <- function(input,output) {
     make_line_plot(input)
   })
   
-  output$overweight_bubble_plot <- renderPlotly({
+  output$category_bubble_plot <- renderPlotly({
     make_bubble_plot(input)
   })
-
 }
 

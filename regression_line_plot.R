@@ -4,6 +4,7 @@ make_regression_line_plot <- function(input) {
   categories <- c("Wasting", "Overweight", "Underweight", "Stunting")
   colors <- list("mediumvioletred", "midnightblue", "mediumturquoise", "slateblue1")
   names(colors) <- categories
+  selected_categories <- c(input$regression_categories)
   
   health_expenditures_average_rate_df <- health_expenditures_group_df %>%
     filter(year %in% (start_year:end_year)) %>%
@@ -16,27 +17,34 @@ make_regression_line_plot <- function(input) {
               Underweight = mean(Underweight, na.rm = TRUE),
               Stunting = mean(Stunting, na.rm = TRUE))
   
-  pivot_malnourishment_average_df <- malnourishment_average_df %>%
+  joined_df <- health_expenditures_average_rate_df %>% 
+    left_join(malnourishment_average_df, by = c("Country.Code"))
+  
+  corr <- lapply(selected_categories, function(x) cor.test(joined_df %>% pull(average_health_expenditure), 
+                                                           joined_df %>% pull(!!as.name(x)), 
+                                                           alternative = "two.sided",
+                                                           method = "pearson"))
+  names(corr) <- selected_categories
+  
+  caption <- lapply(names(corr), function(x) paste("Correlation with ", tolower(x), ": ",  "corr=", round(corr[[x]]$estimate, digits = 2), ", p-value=", round(corr[[x]]$p.value, digits = 7), sep = ""))
+  caption <- paste(caption, collapse = "\n")
+   
+  pivot_joined_df <- joined_df %>%
     pivot_longer(cols = all_of(categories),
                  names_to = "category",
                  values_to = "rate") 
   
-  selected_categories <- c(input$regression_categories)
   selected_colors <- unlist(colors[names(colors) %in% selected_categories])
   
-  correlation_plot_df <- health_expenditures_average_rate_df %>%
-    left_join(pivot_malnourishment_average_df, by = c("Country.Code")) %>%
+  correlation_plot_df <- pivot_joined_df %>%
     select(Country.Name, category, rate, average_health_expenditure) %>%
     filter(category %in% selected_categories) %>%
     mutate(category = factor(category, levels=selected_categories)) %>%
     na.omit()
-  
-  regression_cor_test <- cor.test(correlation_plot_df$average_health_expenditure, correlation_plot_df$rate, method = "pearson")
-  regression_p_val <- round(regression_cor_test$p.value, digits = 6)
+
   
   title <- "Correlation of Countries' Health Expenditures and Under 5 y/o Malnourishment Rates"
-  subtitle <- paste0("Hover over the dots for more info. \nThe correlation statistic (p-value) of the current data is ", regression_p_val,
-                     ".\nLess than 0.05 suggests statistical significance and represents less than 5% chance that the data is random.")
+  subtitle <- "Hover over the dots for more info."
   
   correlation_regression_line_plot <- 
     ggplot(correlation_plot_df,
@@ -57,8 +65,14 @@ make_regression_line_plot <- function(input) {
     scale_x_continuous(labels = comma, trans = "log10") +
     scale_y_continuous(limits = c(0.0, 60.0))
   
-    return(ggplotly(correlation_regression_line_plot, tooltip="text") %>%
-          layout(margin=list(t = 150), 
+    ggplotly(correlation_regression_line_plot, tooltip="text") %>%
+          layout(margin=list(t = 75), 
                 title = list(text = paste0(title, '<br>', '<sub><i>', subtitle, '</i></sub>')),
-                legend = list(y = 0.5, title=list(text = 'Malnourishment<br>Category<br>'))))
+                legend = list(y = 0.5, title=list(text = 'Malnourishment<br>Effect<br>')), 
+                              annotations = 
+                                list(x = 1, y = 1, text = caption, 
+                                     showarrow = F, xref='paper', yref='paper', 
+                                     xanchor='right', yanchor='auto', xshift=0, yshift=0,
+                                     font=list(size=11, color="gray29")))
+    
 }
